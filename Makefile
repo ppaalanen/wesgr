@@ -9,7 +9,7 @@ CPPFLAGS+=$(DEP_CFLAGS)
 LDLIBS+=$(DEP_LIBS)
 
 HEADERS := $(wildcard *.h)
-OBJS := wesgr.o
+OBJS := wesgr.o parse.o graphdata.o
 EXE := wesgr
 GENERATED := config.mk
 

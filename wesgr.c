@@ -26,6 +26,8 @@
 
 #include <json.h>
 
+#include "wesgr.h"
+
 struct bytebuf {
 	uint8_t *data;
 	size_t alloc;
@@ -85,17 +87,8 @@ bytebuf_read_from_file(struct bytebuf *bb, FILE *fp, size_t sz)
 	return 0;
 }
 
-static void
-debug_json_object(struct json_object *jobj)
-{
-	const char *str;
-
-	str = json_object_to_json_string(jobj);
-	printf("%s\n", str);
-}
-
 static int
-parse_file(const char *name)
+parse_file(const char *name, struct parse_context *ctx)
 {
 	int ret = -1;
 	struct bytebuf bb;
@@ -114,6 +107,7 @@ parse_file(const char *name)
 
 	while (1) {
 		enum json_tokener_error jerr;
+		int r;
 
 		jobj = json_tokener_parse_ex(jtok,
 					     (char *)(bb.data + bb.pos),
@@ -136,8 +130,11 @@ parse_file(const char *name)
 
 		bb.pos += jtok->char_offset;
 
-		debug_json_object(jobj);
+		r = parse_context_process_object(ctx, jobj);
 		json_object_put(jobj);
+
+		if (r < 0)
+			break;
 	}
 
 	fclose(fp);
@@ -152,11 +149,23 @@ out_release:
 int
 main(int argc, char *argv[])
 {
+	struct graph_data gdata;
+	struct parse_context ctx;
+
 	if (argc != 2)
 		return 1;
 
-	if (parse_file(argv[1]) < 0)
+	if (graph_data_init(&gdata) < 0)
 		return 1;
+
+	if (parse_context_init(&ctx, &gdata) < 0)
+		return 1;
+
+	if (parse_file(argv[1], &ctx) < 0)
+		return 1;
+
+	parse_context_release(&ctx);
+	graph_data_release(&gdata);
 
 	return 0;
 }
