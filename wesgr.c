@@ -21,10 +21,143 @@
  */
 
 #include <stdio.h>
+#include <stdint.h>
+#include <stdlib.h>
+
+#include <json.h>
+
+struct bytebuf {
+	uint8_t *data;
+	size_t alloc;
+	size_t len;
+	size_t pos;
+};
+
+static void
+bytebuf_init(struct bytebuf *bb)
+{
+	bb->data = NULL;
+	bb->alloc = 0;
+	bb->len = 0;
+	bb->pos = 0;
+}
+
+static void
+bytebuf_release(struct bytebuf *bb)
+{
+	free(bb->data);
+	bytebuf_init(bb);
+}
+
+static int
+bytebuf_ensure(struct bytebuf *bb, size_t sz)
+{
+	uint8_t *data;
+
+	if (bb->alloc >= sz)
+		return 0;
+
+	data = realloc(bb->data, sz);
+	if (!data)
+		return -1;
+
+	bb->data = data;
+	bb->alloc = sz;
+
+	return 0;
+}
+
+static int
+bytebuf_read_from_file(struct bytebuf *bb, FILE *fp, size_t sz)
+{
+	size_t ret;
+
+	if (bytebuf_ensure(bb, sz) < 0)
+		return -1;
+
+	ret = fread(bb->data, 1, sz, fp);
+	if (ferror(fp))
+		return -1;
+
+	bb->len = ret;
+	bb->pos = 0;
+
+	return 0;
+}
+
+static void
+debug_json_object(struct json_object *jobj)
+{
+	const char *str;
+
+	str = json_object_to_json_string(jobj);
+	printf("%s\n", str);
+}
+
+static int
+parse_file(const char *name)
+{
+	int ret = -1;
+	struct bytebuf bb;
+	FILE *fp;
+	struct json_tokener *jtok;
+	struct json_object *jobj;
+
+	bytebuf_init(&bb);
+	jtok = json_tokener_new();
+	if (!jtok)
+		return -1;
+
+	fp = fopen(name, "r");
+	if (!fp)
+		goto out_release;
+
+	while (1) {
+		enum json_tokener_error jerr;
+
+		jobj = json_tokener_parse_ex(jtok,
+					     (char *)(bb.data + bb.pos),
+					     bb.len - bb.pos);
+		jerr = json_tokener_get_error(jtok);
+		if (!jobj && jerr == json_tokener_continue) {
+			if (feof(fp)) {
+				ret = 0;
+				break;
+			}
+
+			if (bytebuf_read_from_file(&bb, fp, 8192) < 0)
+				break;
+
+			continue;
+		}
+
+		if (!jobj)
+			break;
+
+		bb.pos += jtok->char_offset;
+
+		debug_json_object(jobj);
+		json_object_put(jobj);
+	}
+
+	fclose(fp);
+
+out_release:
+	bytebuf_release(&bb);
+	json_tokener_free(jtok);
+
+	return ret;
+}
 
 int
 main(int argc, char *argv[])
 {
+	if (argc != 2)
+		return 1;
+
+	if (parse_file(argv[1]) < 0)
+		return 1;
+
 	return 0;
 }
 
