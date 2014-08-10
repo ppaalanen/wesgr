@@ -125,16 +125,20 @@ parse_file(const char *name, struct parse_context *ctx)
 			continue;
 		}
 
-		if (!jobj)
+		if (!jobj) {
+			fprintf(stderr, "JSON parse failure\n");
 			break;
+		}
 
 		bb.pos += jtok->char_offset;
 
 		r = parse_context_process_object(ctx, jobj);
 		json_object_put(jobj);
 
-		if (r < 0)
+		if (r < 0) {
+			fprintf(stderr, "JSON interpretation error\n");
 			break;
+		}
 	}
 
 	fclose(fp);

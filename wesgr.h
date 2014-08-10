@@ -25,13 +25,35 @@
 
 #include <stdint.h>
 
+#define ARRAY_LENGTH(a) (sizeof(a) / sizeof((a)[0]))
+
 struct json_object;
 
 struct graph_data {
 };
 
+enum object_type {
+	TYPE_WESTON_OUTPUT,
+	TYPE_WESTON_SURFACE,
+};
+
+struct object_info {
+	unsigned id;
+	enum object_type type;
+	struct json_object *jobj;
+	struct object_info *next;
+};
+
+struct lookup_table {
+	unsigned id_base;
+	void **array;
+	unsigned alloc;
+};
+
 struct parse_context {
+	struct lookup_table idmap;
 	struct graph_data *gdata;
+	struct object_info *obj_list;
 };
 
 int
