@@ -139,7 +139,7 @@ parse_context_create_object_info(struct parse_context *ctx, unsigned id,
 {
 	struct object_info *oi;
 
-	oi = malloc(sizeof *oi);
+	oi = calloc(1, sizeof *oi);
 	if (!oi)
 		return NULL;
 
@@ -175,6 +175,32 @@ get_object_type(enum object_type *type, const char *type_name)
 }
 
 static int
+parse_weston_output(struct parse_context *ctx, struct object_info *oi)
+{
+	struct json_object *name_jobj;
+
+	if (!json_object_object_get_ex(oi->jobj, "name", &name_jobj))
+		return -1;
+
+	oi->info.wo.name = json_object_get_string(name_jobj);
+
+	return 0;
+}
+
+static int
+parse_weston_surface(struct parse_context *ctx, struct object_info *oi)
+{
+	struct json_object *desc_jobj;
+
+	if (!json_object_object_get_ex(oi->jobj, "desc", &desc_jobj))
+		return -1;
+
+	oi->info.ws.description = json_object_get_string(desc_jobj);
+
+	return 0;
+}
+
+static int
 parse_context_process_info(struct parse_context *ctx,
 			   struct json_object *jobj,
 			   struct json_object *id_jobj)
@@ -201,6 +227,13 @@ parse_context_process_info(struct parse_context *ctx,
 	oi = parse_context_create_object_info(ctx, id, type, jobj);
 	if (lookup_table_set(&ctx->idmap, id, oi) < 0)
 		return -1;
+
+	switch (oi->type) {
+	case TYPE_WESTON_OUTPUT:
+		return parse_weston_output(ctx, oi);
+	case TYPE_WESTON_SURFACE:
+		return parse_weston_surface(ctx, oi);
+	}
 
 	return 0;
 }
@@ -292,5 +325,23 @@ parse_context_process_object(struct parse_context *ctx,
 		return parse_context_process_timepoint(ctx, jobj, key_obj);
 
 	return -1;
+}
+
+struct object_info *
+get_object_info_from_timepoint(struct parse_context *ctx,
+			       struct json_object *jobj, const char *member)
+{
+	struct json_object *mem_jobj;
+	int64_t value;
+	unsigned id;
+
+	if (!json_object_object_get_ex(jobj, member, &mem_jobj))
+		return NULL;
+
+	if (parse_int(&value, mem_jobj) < 0)
+		return NULL;
+	id = value;
+
+	return lookup_table_get(&ctx->idmap, id);
 }
 

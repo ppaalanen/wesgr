@@ -24,10 +24,27 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <inttypes.h>
+#include <time.h>
 
 #include <json.h>
 
 #include "wesgr.h"
+
+static int
+core_repaint_req(struct parse_context *ctx, const struct timespec *ts,
+		 struct json_object *jobj)
+{
+	struct object_info *output;
+
+	output = get_object_info_from_timepoint(ctx, jobj, "wo");
+	if (!output)
+		return -1;
+
+	printf("%" PRId64 ".%09ld core_repaint_req %s\n",
+		(int64_t)ts->tv_sec, ts->tv_nsec, output->info.wo.name);
+
+	return 0;
+}
 
 static int
 debug_handler(struct parse_context *ctx,
@@ -45,7 +62,7 @@ const struct tp_handler_item tp_handler_list[] = {
 	{ "core_repaint_finished", debug_handler },
 	{ "core_repaint_begin", debug_handler },
 	{ "core_repaint_posted", debug_handler },
-	{ "core_repaint_req", debug_handler },
+	{ "core_repaint_req", core_repaint_req },
 	{ NULL, NULL }
 };
 

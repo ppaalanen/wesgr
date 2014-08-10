@@ -38,11 +38,23 @@ enum object_type {
 	TYPE_WESTON_SURFACE,
 };
 
+struct info_weston_output {
+	const char *name;
+};
+
+struct info_weston_surface {
+	const char *description;
+};
+
 struct object_info {
 	unsigned id;
 	enum object_type type;
 	struct json_object *jobj;
 	struct object_info *next;
+	union {
+		struct info_weston_output wo;
+		struct info_weston_surface ws;
+	} info;
 };
 
 struct lookup_table {
@@ -83,6 +95,10 @@ parse_context_release(struct parse_context *ctx);
 int
 parse_context_process_object(struct parse_context *ctx,
 			     struct json_object *jobj);
+
+struct object_info *
+get_object_info_from_timepoint(struct parse_context *ctx,
+			       struct json_object *jobj, const char *member);
 
 #endif /* WESGR_H */
 
