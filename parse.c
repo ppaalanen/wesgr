@@ -21,6 +21,7 @@
  */
 
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 #include <errno.h>
 
@@ -205,10 +206,73 @@ parse_context_process_info(struct parse_context *ctx,
 }
 
 static int
+parse_int(int64_t *r, struct json_object *jobj)
+{
+	int64_t value;
+
+	if (!jobj || !json_object_is_type(jobj, json_type_int))
+		return -1;
+
+	errno = 0;
+	value = json_object_get_int64(jobj);
+	if (errno)
+		return -1;
+
+	*r = value;
+	return 0;
+}
+
+static int
+parse_timespec(struct timespec *ts_out, struct json_object *jobj)
+{
+	int64_t v;
+	struct timespec ts;
+
+	if (!json_object_is_type(jobj, json_type_array))
+		return -1;
+
+	if (json_object_array_length(jobj) != 2)
+		return -1;
+
+	if (parse_int(&v, json_object_array_get_idx(jobj, 0)) < 0)
+		return -1;
+	ts.tv_sec = v;
+
+	if (parse_int(&v, json_object_array_get_idx(jobj, 1)) < 0)
+		return -1;
+	ts.tv_nsec = v;
+
+	*ts_out = ts;
+
+	return 0;
+}
+
+static int
 parse_context_process_timepoint(struct parse_context *ctx,
 				struct json_object *jobj,
 				struct json_object *T_jobj)
 {
+	struct timespec ts;
+	struct json_object *name_jobj;
+	const char *name;
+	unsigned i;
+
+	if (parse_timespec(&ts, T_jobj) < 0)
+		return -1;
+
+	if (!json_object_object_get_ex(jobj, "N", &name_jobj))
+		return -1;
+
+	if (!json_object_is_type(name_jobj, json_type_string))
+		return -1;
+
+	name = json_object_get_string(name_jobj);
+	for (i = 0; tp_handler_list[i].tp_name; i++)
+		if (strcmp(tp_handler_list[i].tp_name, name) == 0)
+			return tp_handler_list[i].func(ctx, &ts, jobj);
+
+	fprintf(stderr, "unhandled timepoint '%s'\n", name);
+
 	return 0;
 }
 

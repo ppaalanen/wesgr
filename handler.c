@@ -20,69 +20,32 @@
  * CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-#ifndef WESGR_H
-#define WESGR_H
-
+#include <stdio.h>
 #include <stdint.h>
+#include <stdlib.h>
+#include <inttypes.h>
 
-#define ARRAY_LENGTH(a) (sizeof(a) / sizeof((a)[0]))
+#include <json.h>
 
-struct json_object;
-struct timespec;
+#include "wesgr.h"
 
-struct graph_data {
+static int
+debug_handler(struct parse_context *ctx,
+	      const struct timespec *ts, struct json_object *jobj)
+{
+	printf("%" PRId64 ".%09ld %s\n", (int64_t)ts->tv_sec, ts->tv_nsec,
+	       json_object_get_string(jobj));
+
+	return 0;
+}
+
+const struct tp_handler_item tp_handler_list[] = {
+	{ "core_repaint_enter_loop", debug_handler },
+	{ "core_repaint_exit_loop", debug_handler },
+	{ "core_repaint_finished", debug_handler },
+	{ "core_repaint_begin", debug_handler },
+	{ "core_repaint_posted", debug_handler },
+	{ "core_repaint_req", debug_handler },
+	{ NULL, NULL }
 };
-
-enum object_type {
-	TYPE_WESTON_OUTPUT,
-	TYPE_WESTON_SURFACE,
-};
-
-struct object_info {
-	unsigned id;
-	enum object_type type;
-	struct json_object *jobj;
-	struct object_info *next;
-};
-
-struct lookup_table {
-	unsigned id_base;
-	void **array;
-	unsigned alloc;
-};
-
-struct parse_context {
-	struct lookup_table idmap;
-	struct graph_data *gdata;
-	struct object_info *obj_list;
-};
-
-typedef int (*tp_handler_t)(struct parse_context *ctx,
-			    const struct timespec *ts,
-			    struct json_object *jobj);
-
-struct tp_handler_item {
-	const char *tp_name;
-	tp_handler_t func;
-};
-
-extern const struct tp_handler_item tp_handler_list[];
-
-int
-graph_data_init(struct graph_data *gdata);
-
-void
-graph_data_release(struct graph_data *gdata);
-
-int
-parse_context_init(struct parse_context *ctx, struct graph_data *gdata);
-
-void
-parse_context_release(struct parse_context *ctx);
-
-int
-parse_context_process_object(struct parse_context *ctx,
-			     struct json_object *jobj);
-
-#endif /* WESGR_H */
 
