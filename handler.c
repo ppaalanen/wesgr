@@ -25,23 +25,146 @@
 #include <stdlib.h>
 #include <inttypes.h>
 #include <time.h>
+#include <assert.h>
 
 #include <json.h>
 
 #include "wesgr.h"
+
+static void
+timespec_invalidate(struct timespec *ts)
+{
+	ts->tv_nsec = -1;
+}
+
+static int
+timespec_is_valid(struct timespec *ts)
+{
+	return ts->tv_nsec >= 0;
+}
+
+static struct output_graph *
+get_output_graph(struct parse_context *ctx, struct object_info *output)
+{
+	struct output_graph *og;
+	struct info_weston_output *wo;
+
+	if (!output)
+		return NULL;
+
+	assert(output->type == TYPE_WESTON_OUTPUT);
+	wo = &output->info.wo;
+
+	if (wo->output_gr)
+		return wo->output_gr;
+
+	og = calloc(1, sizeof *og);
+	if (!og)
+		return NULL;
+
+	timespec_invalidate(&og->last_req);
+	timespec_invalidate(&og->last_finished);
+	timespec_invalidate(&og->last_begin);
+	timespec_invalidate(&og->last_posted);
+	og->info = wo;
+	og->next = ctx->gdata->output;
+	ctx->gdata->output = og;
+
+	return og;
+}
+
+static struct line_block *
+line_block_create(struct line_graph *linegr, const struct timespec *begin,
+		  const struct timespec *end, const char *style)
+{
+	struct line_block *lb;
+
+	lb = calloc(1, sizeof *lb);
+	if (!lb)
+		return NULL;
+
+	lb->begin = *begin;
+	lb->end = *end;
+	lb->style = style;
+	lb->next = linegr->block;
+	linegr->block = lb;
+
+	return lb;
+}
+
+static int
+core_repaint_begin(struct parse_context *ctx, const struct timespec *ts,
+		   struct json_object *jobj)
+{
+	struct object_info *output;
+	struct output_graph *og;
+
+	output = get_object_info_from_timepoint(ctx, jobj, "wo");
+	og = get_output_graph(ctx, output);
+	if (!og)
+		return -1;
+
+	og->last_begin = *ts;
+
+	if (timespec_is_valid(&og->last_finished)) {
+		struct line_block *lb;
+
+		lb = line_block_create(&og->repaint_line, &og->last_finished,
+				       ts, "repaint_delay");
+		if (!lb)
+			return -1;
+	}
+
+	return 0;
+}
+
+static int
+core_repaint_posted(struct parse_context *ctx, const struct timespec *ts,
+		    struct json_object *jobj)
+{
+	struct object_info *output;
+	struct output_graph *og;
+
+	output = get_object_info_from_timepoint(ctx, jobj, "wo");
+	og = get_output_graph(ctx, output);
+	if (!og)
+		return -1;
+
+	og->last_posted = *ts;
+
+	return 0;
+}
+
+static int
+core_repaint_finished(struct parse_context *ctx, const struct timespec *ts,
+		      struct json_object *jobj)
+{
+	struct object_info *output;
+	struct output_graph *og;
+
+	output = get_object_info_from_timepoint(ctx, jobj, "wo");
+	og = get_output_graph(ctx, output);
+	if (!og)
+		return -1;
+
+	og->last_finished = *ts;
+
+	return 0;
+}
 
 static int
 core_repaint_req(struct parse_context *ctx, const struct timespec *ts,
 		 struct json_object *jobj)
 {
 	struct object_info *output;
+	struct output_graph *og;
 
 	output = get_object_info_from_timepoint(ctx, jobj, "wo");
-	if (!output)
+	og = get_output_graph(ctx, output);
+	if (!og)
 		return -1;
 
-	printf("%" PRId64 ".%09ld core_repaint_req %s\n",
-		(int64_t)ts->tv_sec, ts->tv_nsec, output->info.wo.name);
+	og->last_req = *ts;
 
 	return 0;
 }
@@ -59,9 +182,9 @@ debug_handler(struct parse_context *ctx,
 const struct tp_handler_item tp_handler_list[] = {
 	{ "core_repaint_enter_loop", debug_handler },
 	{ "core_repaint_exit_loop", debug_handler },
-	{ "core_repaint_finished", debug_handler },
-	{ "core_repaint_begin", debug_handler },
-	{ "core_repaint_posted", debug_handler },
+	{ "core_repaint_finished", core_repaint_finished },
+	{ "core_repaint_begin", core_repaint_begin },
+	{ "core_repaint_posted", core_repaint_posted },
 	{ "core_repaint_req", core_repaint_req },
 	{ NULL, NULL }
 };

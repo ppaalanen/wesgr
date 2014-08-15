@@ -24,13 +24,40 @@
 #define WESGR_H
 
 #include <stdint.h>
+#include <time.h>
 
 #define ARRAY_LENGTH(a) (sizeof(a) / sizeof((a)[0]))
 
 struct json_object;
-struct timespec;
+
+struct info_weston_output;
+struct info_weston_surface;
+
+struct line_block {
+	struct timespec begin;
+	struct timespec end;
+	const char *style;
+	char *desc;
+	struct line_block *next;
+};
+
+struct line_graph {
+	struct line_block *block;
+};
+
+struct output_graph {
+	struct info_weston_output *info;
+	struct output_graph *next;
+	struct line_graph repaint_line;
+
+	struct timespec last_req;
+	struct timespec last_finished;
+	struct timespec last_begin;
+	struct timespec last_posted;
+};
 
 struct graph_data {
+	struct output_graph *output;
 };
 
 enum object_type {
@@ -40,6 +67,7 @@ enum object_type {
 
 struct info_weston_output {
 	const char *name;
+	struct output_graph *output_gr;
 };
 
 struct info_weston_surface {
