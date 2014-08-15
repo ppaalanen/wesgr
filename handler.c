@@ -31,18 +31,6 @@
 
 #include "wesgr.h"
 
-static void
-timespec_invalidate(struct timespec *ts)
-{
-	ts->tv_nsec = -1;
-}
-
-static int
-timespec_is_valid(struct timespec *ts)
-{
-	return ts->tv_nsec >= 0;
-}
-
 static struct output_graph *
 get_output_graph(struct parse_context *ctx, struct object_info *output)
 {

@@ -58,6 +58,9 @@ struct output_graph {
 
 struct graph_data {
 	struct output_graph *output;
+
+	struct timespec begin;
+	struct timespec end;
 };
 
 enum object_type {
@@ -114,6 +117,9 @@ graph_data_init(struct graph_data *gdata);
 void
 graph_data_release(struct graph_data *gdata);
 
+void
+graph_data_time(struct graph_data *gdata, const struct timespec *ts);
+
 int
 graph_data_to_svg(struct graph_data *gdata, const char *filename);
 
@@ -130,6 +136,18 @@ parse_context_process_object(struct parse_context *ctx,
 struct object_info *
 get_object_info_from_timepoint(struct parse_context *ctx,
 			       struct json_object *jobj, const char *member);
+
+static inline void
+timespec_invalidate(struct timespec *ts)
+{
+	ts->tv_nsec = -1;
+}
+
+static inline int
+timespec_is_valid(struct timespec *ts)
+{
+	return ts->tv_nsec >= 0;
+}
 
 #endif /* WESGR_H */
 

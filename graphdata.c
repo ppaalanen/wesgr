@@ -28,12 +28,16 @@
 
 struct svg_context {
 	FILE *fp;
+	struct timespec begin;
+	double nsec_to_x;
+	double offset_x;
 };
 
 int
 graph_data_init(struct graph_data *gdata)
 {
 	memset(gdata, 0, sizeof *gdata);
+	timespec_invalidate(&gdata->begin);
 
 	return 0;
 }
@@ -74,12 +78,47 @@ graph_data_release(struct graph_data *gdata)
 	}
 }
 
+void
+graph_data_time(struct graph_data *gdata, const struct timespec *ts)
+{
+	if (!timespec_is_valid(&gdata->begin))
+		gdata->begin = *ts;
+	gdata->end = *ts;
+}
+
+#define NSEC_PER_SEC 1000000000
+
+static void
+timespec_sub(struct timespec *r,
+	     const struct timespec *a, const struct timespec *b)
+{
+	r->tv_sec = a->tv_sec - b->tv_sec;
+	r->tv_nsec = a->tv_nsec - b->tv_nsec;
+	if (r->tv_nsec < 0) {
+		r->tv_sec--;
+		r->tv_nsec += NSEC_PER_SEC;
+	}
+}
+
+static double
+svg_get_x(struct svg_context *ctx, const struct timespec *ts)
+{
+	struct timespec d;
+	uint64_t nsec;
+
+	timespec_sub(&d, ts, &ctx->begin);
+	nsec = d.tv_sec * NSEC_PER_SEC + d.tv_nsec;
+
+	return ctx->offset_x + ctx->nsec_to_x * nsec;
+}
+
 static int
 line_block_to_svg(struct line_block *lb, struct svg_context *ctx)
 {
-	fprintf(ctx->fp, "%s %lld.%09ld -> %lld.%09ld\n",
+	fprintf(ctx->fp, "%15s %lld.%09ld -> %lld.%09ld,\t%f -> %f\n",
 		lb->style, (long long)lb->begin.tv_sec, lb->begin.tv_nsec,
-		(long long)lb->end.tv_sec, lb->end.tv_nsec);
+		(long long)lb->end.tv_sec, lb->end.tv_nsec,
+		svg_get_x(ctx, &lb->begin), svg_get_x(ctx, &lb->end));
 
 	return 0;
 }
@@ -107,8 +146,15 @@ graph_data_to_svg(struct graph_data *gdata, const char *filename)
 {
 	struct output_graph *og;
 	struct svg_context ctx;
+	struct timespec d;
+	uint64_t nsec;
 
 	ctx.fp = stdout;
+	ctx.begin = gdata->begin;
+	ctx.offset_x = 10.0;
+	timespec_sub(&d, &gdata->end, &gdata->begin);
+	nsec = d.tv_sec * NSEC_PER_SEC + d.tv_nsec;
+	ctx.nsec_to_x = 500.0 / nsec;
 
 	for (og = gdata->output; og; og = og->next)
 		if (output_graph_to_svg(og, &ctx) < 0)

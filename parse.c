@@ -299,6 +299,7 @@ parse_context_process_timepoint(struct parse_context *ctx,
 	if (!json_object_is_type(name_jobj, json_type_string))
 		return -1;
 
+	graph_data_time(ctx->gdata, &ts);
 	name = json_object_get_string(name_jobj);
 	for (i = 0; tp_handler_list[i].tp_name; i++)
 		if (strcmp(tp_handler_list[i].tp_name, name) == 0)
