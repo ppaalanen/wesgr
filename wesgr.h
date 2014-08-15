@@ -115,6 +115,9 @@ void
 graph_data_release(struct graph_data *gdata);
 
 int
+graph_data_to_svg(struct graph_data *gdata, const char *filename);
+
+int
 parse_context_init(struct parse_context *ctx, struct graph_data *gdata);
 
 void

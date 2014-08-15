@@ -70,6 +70,8 @@ get_output_graph(struct parse_context *ctx, struct object_info *output)
 	og->next = ctx->gdata->output;
 	ctx->gdata->output = og;
 
+	wo->output_gr = og;
+
 	return og;
 }
 
@@ -132,6 +134,15 @@ core_repaint_posted(struct parse_context *ctx, const struct timespec *ts,
 
 	og->last_posted = *ts;
 
+	if (timespec_is_valid(&og->last_begin)) {
+		struct line_block *lb;
+
+		lb = line_block_create(&og->repaint_line, &og->last_begin,
+				       ts, "repaint_submit");
+		if (!lb)
+			return -1;
+	}
+
 	return 0;
 }
 
@@ -148,6 +159,15 @@ core_repaint_finished(struct parse_context *ctx, const struct timespec *ts,
 		return -1;
 
 	og->last_finished = *ts;
+
+	if (timespec_is_valid(&og->last_posted)) {
+		struct line_block *lb;
+
+		lb = line_block_create(&og->repaint_line, &og->last_posted,
+				       ts, "repaint_gpu");
+		if (!lb)
+			return -1;
+	}
 
 	return 0;
 }

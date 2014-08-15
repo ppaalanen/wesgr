@@ -168,6 +168,9 @@ main(int argc, char *argv[])
 	if (parse_file(argv[1], &ctx) < 0)
 		return 1;
 
+	if (graph_data_to_svg(&gdata, "graph.svg") < 0)
+		return 1;
+
 	parse_context_release(&ctx);
 	graph_data_release(&gdata);
 
