@@ -166,23 +166,40 @@ output_graph_to_svg(struct output_graph *og, struct svg_context *ctx)
 	return 0;
 }
 
-static void
+static int
 headers_to_svg(struct svg_context *ctx, int width, int height)
 {
+	FILE *in;
+	char buf[2048];
+	size_t len;
+
 	fprintf(ctx->fp,
-	"<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"%d\" height=\"%d\""
-	" version=\"1.1\" baseProfile=\"full\">\n"
-	"<defs>\n"
-	"<style type=\"text/css\"><![CDATA[\n"
-	"#layer1 {\n"
-	"	stroke: black;\n"
-	"	stroke-width: 5;\n"
-	"}\n"
-	"]]></style>\n"
-	"</defs>\n"
-	"<rect width=\"100%%\" height=\"100%%\" fill=\"white\" />\n"
-	"<g id=\"layer1\">\n",
-	width, height);
+		"<svg xmlns=\"http://www.w3.org/2000/svg\""
+		" width=\"%d\" height=\"%d\""
+		" version=\"1.1\" baseProfile=\"full\">\n"
+		"<defs>\n"
+		"<style type=\"text/css\"><![CDATA[\n",
+		width, height);
+
+	in = fopen("style.css", "r");
+	if (!in)
+		return ERROR;
+
+	while ((len = fread(buf, 1, sizeof(buf), in))) {
+		if (fwrite(buf, 1, len, ctx->fp) != len) {
+			fclose(in);
+			return ERROR;
+		}
+	}
+	fclose(in);
+
+	fprintf(ctx->fp,
+		"]]></style>\n"
+		"</defs>\n"
+		"<rect width=\"100%%\" height=\"100%%\" fill=\"white\" />\n"
+		"<g id=\"layer1\">\n");
+
+	return 0;
 }
 
 static void
@@ -213,7 +230,8 @@ graph_data_to_svg(struct graph_data *gdata, const char *filename)
 	ctx.cur_y = 50.5;
 	ctx.line_step_y = 20.0;
 
-	headers_to_svg(&ctx, 1520, 400);
+	if (headers_to_svg(&ctx, 1520, 400) < 0)
+		return ERROR;
 
 	for (og = gdata->output; og; og = og->next)
 		if (output_graph_to_svg(og, &ctx) < 0)
