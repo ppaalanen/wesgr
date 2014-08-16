@@ -6,7 +6,7 @@ V ?= 0
 CFLAGS+=-Wextra -Wall -Wno-unused-parameter \
 	-Wstrict-prototypes -Wmissing-prototypes -O0 -g
 CPPFLAGS+=$(DEP_CFLAGS)
-LDLIBS+=$(DEP_LIBS)
+LDLIBS+=$(DEP_LIBS) -lm
 
 HEADERS := $(wildcard *.h)
 OBJS := wesgr.o parse.o graphdata.o handler.o

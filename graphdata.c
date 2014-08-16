@@ -23,6 +23,8 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <math.h>
+#include <inttypes.h>
 
 #include "wesgr.h"
 
@@ -185,10 +187,8 @@ output_graph_to_svg(struct output_graph *og, struct svg_context *ctx)
 }
 
 static uint64_t
-round_up_nsec(uint64_t nsec, uint64_t ms)
+round_up(uint64_t nsec, uint64_t f)
 {
-	uint64_t f = ms * 1000000;
-
 	return (nsec + f - 1) / f * f;
 }
 
@@ -196,19 +196,58 @@ static void
 time_scale_to_svg(struct svg_context *ctx)
 {
 	uint64_t nsec;
+	uint64_t skip_ms;
+	static const uint64_t mtick_levels[] = { 1, 5, 10, 20, 50, 100, 500 };
+	uint64_t big_skip = NSEC_PER_SEC;
+	uint64_t lil_skip;
+	unsigned i;
+	const double big_tick_size = 15.0;
+	const double lil_tick_size = 10.0;
+	const double tick_label_up = 5.0;
+
+	skip_ms = round(50.0 / ctx->nsec_to_x * 1e-6);
+	for (i = 0; i < ARRAY_LENGTH(mtick_levels); i++) {
+		if (skip_ms < mtick_levels[i]) {
+			big_skip = mtick_levels[i] * 1000000;
+			break;
+		}
+	}
+	lil_skip = big_skip / 5;
+
+	fprintf(ctx->fp, "<path d=\"");
+	for (nsec = round_up(ctx->time_range.a, big_skip);
+	     nsec < ctx->time_range.b; nsec += big_skip) {
+		fprintf(ctx->fp, "M %.2f %.2f V %.2f ",
+			svg_get_x_from_nsec(ctx, nsec), ctx->cur_y,
+			ctx->cur_y + big_tick_size);
+	}
+	fprintf(ctx->fp, "\" class=\"major_tick\" />\n");
+
+	for (nsec = round_up(ctx->time_range.a, big_skip);
+	     nsec < ctx->time_range.b; nsec += big_skip) {
+		fprintf(ctx->fp, "<text x=\"%.2f\" y=\"%.2f\""
+			" text-anchor=\"middle\""
+			" class=\"tick_label\">%" PRIu64 "</text>\n",
+			svg_get_x_from_nsec(ctx, nsec),
+			ctx->cur_y - tick_label_up,
+			nsec / 1000000);
+	}
+
+	fprintf(ctx->fp, "<path d=\"");
+	for (nsec = round_up(ctx->time_range.a, lil_skip);
+	     nsec < ctx->time_range.b; nsec += lil_skip) {
+		if (nsec % big_skip == 0)
+			continue;
+
+		fprintf(ctx->fp, "M %.2f %.2f V %.2f ",
+			svg_get_x_from_nsec(ctx, nsec), ctx->cur_y,
+			ctx->cur_y + lil_tick_size);
+	}
+	fprintf(ctx->fp, "\" class=\"minor_tick\" />\n");
 
 	fprintf(ctx->fp, "<path d=\"M %.2f %.2f H %.2f\" class=\"axis\" />\n",
 		svg_get_x_from_nsec(ctx, ctx->time_range.a), ctx->cur_y,
 		svg_get_x_from_nsec(ctx, ctx->time_range.b));
-
-	fprintf(ctx->fp, "<path d=\"");
-	for (nsec = round_up_nsec(ctx->time_range.a, 10);
-	     nsec < ctx->time_range.b; nsec += 10000000) {
-		fprintf(ctx->fp, "M %.2f %.2f V %.2f ",
-			svg_get_x_from_nsec(ctx, nsec), ctx->cur_y,
-			ctx->cur_y + 10.0);
-	}
-	fprintf(ctx->fp, "\" class=\"major_tick\" />\n");
 }
 
 static int

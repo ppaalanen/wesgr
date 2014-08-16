@@ -6,7 +6,15 @@ g[class~="gpu_line"] path {
 }
 
 path.axis, path.major_tick {
-	stroke: #444;
+	stroke: #000;
 	stroke-width: 1;
+}
+
+path.minor_tick {
+	stroke: #888;
+	stroke-width: 1;
+}
+
+text.tick_label {
 }
 
