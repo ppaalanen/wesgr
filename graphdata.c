@@ -31,6 +31,8 @@ struct svg_context {
 	struct timespec begin;
 	double nsec_to_x;
 	double offset_x;
+
+	double cur_y;
 };
 
 int
@@ -115,10 +117,13 @@ svg_get_x(struct svg_context *ctx, const struct timespec *ts)
 static int
 line_block_to_svg(struct line_block *lb, struct svg_context *ctx)
 {
-	fprintf(ctx->fp, "%15s %lld.%09ld -> %lld.%09ld,\t%f -> %f\n",
-		lb->style, (long long)lb->begin.tv_sec, lb->begin.tv_nsec,
-		(long long)lb->end.tv_sec, lb->end.tv_nsec,
-		svg_get_x(ctx, &lb->begin), svg_get_x(ctx, &lb->end));
+	double a, b;
+
+	a = svg_get_x(ctx, &lb->begin);
+	b = svg_get_x(ctx, &lb->end);
+
+	fprintf(ctx->fp, "<path d=\"M %.2f %.2f H %.2f\" />\n",
+		a, ctx->cur_y, b);
 
 	return 0;
 }
@@ -141,6 +146,33 @@ output_graph_to_svg(struct output_graph *og, struct svg_context *ctx)
 	return line_graph_to_svg(&og->repaint_line, ctx);
 }
 
+static void
+headers_to_svg(struct svg_context *ctx, int width, int height)
+{
+	fprintf(ctx->fp,
+	"<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"%d\" height=\"%d\""
+	" version=\"1.1\" baseProfile=\"full\">\n"
+	"<defs>\n"
+	"<style type=\"text/css\"><![CDATA[\n"
+	"#layer1 {\n"
+	"	stroke: black;\n"
+	"	stroke-width: 5;\n"
+	"}\n"
+	"]]></style>\n"
+	"</defs>\n"
+	"<rect width=\"100%%\" height=\"100%%\" fill=\"white\" />\n"
+	"<g id=\"layer1\">\n",
+	width, height);
+}
+
+static void
+footers_to_svg(struct svg_context *ctx)
+{
+	fprintf(ctx->fp,
+	"</g>\n"
+	"</svg>\n");
+}
+
 int
 graph_data_to_svg(struct graph_data *gdata, const char *filename)
 {
@@ -158,10 +190,15 @@ graph_data_to_svg(struct graph_data *gdata, const char *filename)
 	timespec_sub(&d, &gdata->end, &gdata->begin);
 	nsec = d.tv_sec * NSEC_PER_SEC + d.tv_nsec;
 	ctx.nsec_to_x = 1500.0 / nsec;
+	ctx.cur_y = 50.5;
+
+	headers_to_svg(&ctx, 1520, 400);
 
 	for (og = gdata->output; og; og = og->next)
 		if (output_graph_to_svg(og, &ctx) < 0)
 			return ERROR;
+
+	footers_to_svg(&ctx);
 
 	if (fclose(ctx.fp) != 0)
 		return ERROR;
