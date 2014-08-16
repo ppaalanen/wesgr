@@ -1,0 +1,706 @@
+{ "id":1, "type":"weston_output", "name":null }
+{ "id":2, "type":"weston_surface", "desc":"cursor" }
+{ "T":[9894, 391855448], "N":"core_repaint_req", "wo":1,
+	"C": [
+		{ "f":"weston_view_schedule_repaint", "l":1187, "ws":2 }
+	] }
+{ "id":2, "type":"weston_surface", "desc":"cursor" }
+{ "T":[9894, 391975574], "N":"core_repaint_enter_loop", "wo":1,
+	"C": [
+		{ "f":"weston_view_schedule_repaint", "l":1187, "ws":2 }
+	] }
+{ "T":[9894, 392083409], "N":"core_repaint_finished", "wo":1 }
+{ "T":[9894, 401243120], "N":"core_repaint_begin", "wo":1 }
+{ "T":[9894, 402280608], "N":"core_repaint_req", "wo":1,
+	"C": [
+		{ "f":"weston_view_schedule_repaint", "l":1187, "ws":2 }
+	] }
+{ "T":[9894, 402334665], "N":"core_repaint_posted", "wo":1 }
+{ "T":[9894, 412376049], "N":"core_repaint_finished", "wo":1 }
+{ "T":[9894, 421528427], "N":"core_repaint_begin", "wo":1 }
+{ "T":[9894, 422284036], "N":"core_repaint_req", "wo":1,
+	"C": [
+		{ "f":"weston_view_schedule_repaint", "l":1187, "ws":2 }
+	] }
+{ "T":[9894, 422346125], "N":"core_repaint_posted", "wo":1 }
+{ "T":[9894, 432379896], "N":"core_repaint_finished", "wo":1 }
+{ "T":[9894, 441533811], "N":"core_repaint_begin", "wo":1 }
+{ "T":[9894, 442270982], "N":"core_repaint_req", "wo":1,
+	"C": [
+		{ "f":"weston_view_schedule_repaint", "l":1187, "ws":2 }
+	] }
+{ "T":[9894, 442340334], "N":"core_repaint_posted", "wo":1 }
+{ "T":[9894, 452376131], "N":"core_repaint_finished", "wo":1 }
+{ "T":[9894, 461529487], "N":"core_repaint_begin", "wo":1 }
+{ "T":[9894, 462264354], "N":"core_repaint_req", "wo":1,
+	"C": [
+		{ "f":"weston_view_schedule_repaint", "l":1187, "ws":2 }
+	] }
+{ "T":[9894, 462325115], "N":"core_repaint_posted", "wo":1 }
+{ "T":[9894, 472315725], "N":"core_repaint_finished", "wo":1 }
+{ "T":[9894, 481466916], "N":"core_repaint_begin", "wo":1 }
+{ "T":[9894, 482211490], "N":"core_repaint_req", "wo":1,
+	"C": [
+		{ "f":"weston_view_schedule_repaint", "l":1187, "ws":2 }
+	] }
+{ "T":[9894, 482280214], "N":"core_repaint_posted", "wo":1 }
+{ "T":[9894, 492262163], "N":"core_repaint_finished", "wo":1 }
+{ "T":[9894, 501423621], "N":"core_repaint_begin", "wo":1 }
+{ "T":[9894, 502176646], "N":"core_repaint_req", "wo":1,
+	"C": [
+		{ "f":"weston_view_schedule_repaint", "l":1187, "ws":2 }
+	] }
+{ "T":[9894, 502237547], "N":"core_repaint_posted", "wo":1 }
+{ "T":[9894, 512202316], "N":"core_repaint_finished", "wo":1 }
+{ "T":[9894, 521370339], "N":"core_repaint_begin", "wo":1 }
+{ "T":[9894, 522163662], "N":"core_repaint_req", "wo":1,
+	"C": [
+		{ "f":"weston_view_schedule_repaint", "l":1187, "ws":2 }
+	] }
+{ "T":[9894, 522235808], "N":"core_repaint_posted", "wo":1 }
+{ "T":[9894, 532267344], "N":"core_repaint_finished", "wo":1 }
+{ "T":[9894, 541430478], "N":"core_repaint_begin", "wo":1 }
+{ "T":[9894, 542186297], "N":"core_repaint_req", "wo":1,
+	"C": [
+		{ "f":"weston_view_schedule_repaint", "l":1187, "ws":2 }
+	] }
+{ "T":[9894, 542248595], "N":"core_repaint_posted", "wo":1 }
+{ "T":[9894, 552287534], "N":"core_repaint_finished", "wo":1 }
+{ "T":[9894, 561447316], "N":"core_repaint_begin", "wo":1 }
+{ "T":[9894, 562240081], "N":"core_repaint_req", "wo":1,
+	"C": [
+		{ "f":"weston_view_schedule_repaint", "l":1187, "ws":2 }
+	] }
+{ "T":[9894, 562310690], "N":"core_repaint_posted", "wo":1 }
+{ "T":[9894, 572289846], "N":"core_repaint_finished", "wo":1 }
+{ "T":[9894, 581456192], "N":"core_repaint_begin", "wo":1 }
+{ "T":[9894, 582207890], "N":"core_repaint_req", "wo":1,
+	"C": [
+		{ "f":"weston_view_schedule_repaint", "l":1187, "ws":2 }
+	] }
+{ "T":[9894, 582269909], "N":"core_repaint_posted", "wo":1 }
+{ "T":[9894, 592256608], "N":"core_repaint_finished", "wo":1 }
+{ "T":[9894, 601416878], "N":"core_repaint_begin", "wo":1 }
+{ "T":[9894, 602170671], "N":"core_repaint_req", "wo":1,
+	"C": [
+		{ "f":"weston_view_schedule_repaint", "l":1187, "ws":2 }
+	] }
+{ "T":[9894, 602232481], "N":"core_repaint_posted", "wo":1 }
+{ "T":[9894, 612278753], "N":"core_repaint_finished", "wo":1 }
+{ "T":[9894, 621434205], "N":"core_repaint_begin", "wo":1 }
+{ "T":[9894, 622184855], "N":"core_repaint_req", "wo":1,
+	"C": [
+		{ "f":"weston_view_schedule_repaint", "l":1187, "ws":2 }
+	] }
+{ "T":[9894, 622337877], "N":"core_repaint_posted", "wo":1 }
+{ "T":[9894, 632286442], "N":"core_repaint_finished", "wo":1 }
+{ "T":[9894, 641445735], "N":"core_repaint_begin", "wo":1 }
+{ "T":[9894, 642226347], "N":"core_repaint_req", "wo":1,
+	"C": [
+		{ "f":"weston_view_schedule_repaint", "l":1187, "ws":2 }
+	] }
+{ "T":[9894, 642297864], "N":"core_repaint_posted", "wo":1 }
+{ "T":[9894, 652326887], "N":"core_repaint_finished", "wo":1 }
+{ "T":[9894, 661484503], "N":"core_repaint_begin", "wo":1 }
+{ "T":[9894, 662241160], "N":"core_repaint_req", "wo":1,
+	"C": [
+		{ "f":"weston_view_schedule_repaint", "l":1187, "ws":2 }
+	] }
+{ "T":[9894, 662302410], "N":"core_repaint_posted", "wo":1 }
+{ "T":[9894, 672292042], "N":"core_repaint_finished", "wo":1 }
+{ "T":[9894, 681450776], "N":"core_repaint_begin", "wo":1 }
+{ "T":[9894, 682209668], "N":"core_repaint_req", "wo":1,
+	"C": [
+		{ "f":"weston_view_schedule_repaint", "l":1187, "ws":2 }
+	] }
+{ "T":[9894, 682279928], "N":"core_repaint_posted", "wo":1 }
+{ "T":[9894, 692260690], "N":"core_repaint_finished", "wo":1 }
+{ "T":[9894, 701411811], "N":"core_repaint_begin", "wo":1 }
+{ "T":[9894, 702169865], "N":"core_repaint_req", "wo":1,
+	"C": [
+		{ "f":"weston_view_schedule_repaint", "l":1187, "ws":2 }
+	] }
+{ "T":[9894, 702231325], "N":"core_repaint_posted", "wo":1 }
+{ "T":[9894, 712271452], "N":"core_repaint_finished", "wo":1 }
+{ "T":[9894, 721429417], "N":"core_repaint_begin", "wo":1 }
+{ "T":[9894, 722316747], "N":"core_repaint_req", "wo":1,
+	"C": [
+		{ "f":"weston_view_schedule_repaint", "l":1187, "ws":2 }
+	] }
+{ "T":[9894, 722387915], "N":"core_repaint_posted", "wo":1 }
+{ "T":[9894, 732418753], "N":"core_repaint_finished", "wo":1 }
+{ "T":[9894, 741539074], "N":"core_repaint_begin", "wo":1 }
+{ "T":[9894, 742278550], "N":"core_repaint_req", "wo":1,
+	"C": [
+		{ "f":"weston_view_schedule_repaint", "l":1187, "ws":2 }
+	] }
+{ "T":[9894, 742339521], "N":"core_repaint_posted", "wo":1 }
+{ "T":[9894, 752382372], "N":"core_repaint_finished", "wo":1 }
+{ "T":[9894, 761460789], "N":"core_repaint_begin", "wo":1 }
+{ "T":[9894, 762264937], "N":"core_repaint_req", "wo":1,
+	"C": [
+		{ "f":"weston_view_schedule_repaint", "l":1187, "ws":2 }
+	] }
+{ "T":[9894, 762339877], "N":"core_repaint_posted", "wo":1 }
+{ "T":[9894, 772314423], "N":"core_repaint_finished", "wo":1 }
+{ "T":[9894, 781473646], "N":"core_repaint_begin", "wo":1 }
+{ "T":[9894, 782308664], "N":"core_repaint_req", "wo":1,
+	"C": [
+		{ "f":"weston_view_schedule_repaint", "l":1187, "ws":2 }
+	] }
+{ "T":[9894, 782378365], "N":"core_repaint_posted", "wo":1 }
+{ "T":[9894, 792332239], "N":"core_repaint_finished", "wo":1 }
+{ "T":[9894, 801459754], "N":"core_repaint_begin", "wo":1 }
+{ "T":[9894, 801938374], "N":"core_repaint_req", "wo":1,
+	"C": [
+		{ "f":"weston_view_schedule_repaint", "l":1187, "ws":2 }
+	] }
+{ "T":[9894, 801979370], "N":"core_repaint_posted", "wo":1 }
+{ "T":[9894, 812045129], "N":"core_repaint_finished", "wo":1 }
+{ "T":[9894, 821205818], "N":"core_repaint_begin", "wo":1 }
+{ "T":[9894, 821929929], "N":"core_repaint_req", "wo":1,
+	"C": [
+		{ "f":"weston_view_schedule_repaint", "l":1187, "ws":2 }
+	] }
+{ "T":[9894, 822042443], "N":"core_repaint_posted", "wo":1 }
+{ "T":[9894, 832033472], "N":"core_repaint_finished", "wo":1 }
+{ "T":[9894, 841199050], "N":"core_repaint_begin", "wo":1 }
+{ "id":2, "type":"weston_surface", "desc":"cursor" }
+{ "T":[9894, 842714738], "N":"core_repaint_req", "wo":1,
+	"C": [
+		{ "f":"weston_view_schedule_repaint", "l":1187, "ws":2 }
+	] }
+{ "T":[9894, 842793170], "N":"core_repaint_posted", "wo":1 }
+{ "T":[9894, 852812833], "N":"core_repaint_finished", "wo":1 }
+{ "T":[9894, 861976386], "N":"core_repaint_begin", "wo":1 }
+{ "T":[9894, 863688677], "N":"core_repaint_req", "wo":1,
+	"C": [
+		{ "f":"weston_view_schedule_repaint", "l":1187, "ws":2 }
+	] }
+{ "T":[9894, 863759286], "N":"core_repaint_posted", "wo":1 }
+{ "T":[9894, 873736277], "N":"core_repaint_finished", "wo":1 }
+{ "T":[9894, 882896687], "N":"core_repaint_begin", "wo":1 }
+{ "T":[9894, 883631972], "N":"core_repaint_req", "wo":1,
+	"C": [
+		{ "f":"weston_view_schedule_repaint", "l":1187, "ws":2 }
+	] }
+{ "T":[9894, 883752099], "N":"core_repaint_posted", "wo":1 }
+{ "T":[9894, 893680201], "N":"core_repaint_finished", "wo":1 }
+{ "T":[9894, 902840401], "N":"core_repaint_begin", "wo":1 }
+{ "T":[9894, 903570239], "N":"core_repaint_posted", "wo":1 }
+{ "T":[9894, 913644239], "N":"core_repaint_finished", "wo":1 }
+{ "T":[9894, 922804160], "N":"core_repaint_exit_loop", "wo":1 }
+{ "T":[9894, 922890414], "N":"core_repaint_req", "wo":1,
+	"C": [
+		{ "f":"weston_view_schedule_repaint", "l":1187, "ws":2 }
+	] }
+{ "T":[9894, 922926032], "N":"core_repaint_enter_loop", "wo":1,
+	"C": [
+		{ "f":"weston_view_schedule_repaint", "l":1187, "ws":2 }
+	] }
+{ "T":[9894, 922983302], "N":"core_repaint_finished", "wo":1 }
+{ "T":[9894, 932178633], "N":"core_repaint_begin", "wo":1 }
+{ "T":[9894, 932866636], "N":"core_repaint_posted", "wo":1 }
+{ "T":[9894, 942928344], "N":"core_repaint_finished", "wo":1 }
+{ "T":[9894, 952087077], "N":"core_repaint_exit_loop", "wo":1 }
+{ "T":[9894, 967764068], "N":"core_repaint_req", "wo":1,
+	"C": [
+		{ "f":"weston_view_schedule_repaint", "l":1187, "ws":2 }
+	] }
+{ "T":[9894, 967812677], "N":"core_repaint_enter_loop", "wo":1,
+	"C": [
+		{ "f":"weston_view_schedule_repaint", "l":1187, "ws":2 }
+	] }
+{ "T":[9894, 967873439], "N":"core_repaint_finished", "wo":1 }
+{ "T":[9894, 977029379], "N":"core_repaint_begin", "wo":1 }
+{ "T":[9894, 977740151], "N":"core_repaint_posted", "wo":1 }
+{ "T":[9894, 987855077], "N":"core_repaint_finished", "wo":1 }
+{ "T":[9894, 997027570], "N":"core_repaint_exit_loop", "wo":1 }
+{ "id":3, "type":"weston_surface", "desc":"panel for output (null)" }
+{ "T":[9895, 96644384], "N":"core_repaint_req", "wo":1,
+	"C": [
+		{ "f":"weston_surface_schedule_repaint", "l":1174, "ws":3 }
+	] }
+{ "id":3, "type":"weston_surface", "desc":"panel for output (null)" }
+{ "T":[9895, 96697603], "N":"core_repaint_enter_loop", "wo":1,
+	"C": [
+		{ "f":"weston_surface_schedule_repaint", "l":1174, "ws":3 }
+	] }
+{ "T":[9895, 96742091], "N":"core_repaint_finished", "wo":1 }
+{ "T":[9895, 105895657], "N":"core_repaint_begin", "wo":1 }
+{ "T":[9895, 107641471], "N":"core_repaint_posted", "wo":1 }
+{ "T":[9895, 117748576], "N":"core_repaint_finished", "wo":1 }
+{ "T":[9895, 126912059], "N":"core_repaint_exit_loop", "wo":1 }
+{ "T":[9895, 193661578], "N":"core_repaint_req", "wo":1,
+	"C": [
+		{ "f":"weston_surface_schedule_repaint", "l":1174, "ws":3 }
+	] }
+{ "T":[9895, 193720035], "N":"core_repaint_enter_loop", "wo":1,
+	"C": [
+		{ "f":"weston_surface_schedule_repaint", "l":1174, "ws":3 }
+	] }
+{ "T":[9895, 193763895], "N":"core_repaint_finished", "wo":1 }
+{ "T":[9895, 202920184], "N":"core_repaint_begin", "wo":1 }
+{ "T":[9895, 203647089], "N":"core_repaint_posted", "wo":1 }
+{ "T":[9895, 213698250], "N":"core_repaint_finished", "wo":1 }
+{ "T":[9895, 222766331], "N":"core_repaint_exit_loop", "wo":1 }
+{ "T":[9895, 478848963], "N":"core_repaint_req", "wo":1,
+	"C": [
+		{ "f":"weston_surface_schedule_repaint", "l":1174, "ws":3 }
+	] }
+{ "T":[9895, 478916360], "N":"core_repaint_enter_loop", "wo":1,
+	"C": [
+		{ "f":"weston_surface_schedule_repaint", "l":1174, "ws":3 }
+	] }
+{ "T":[9895, 479113940], "N":"core_repaint_finished", "wo":1 }
+{ "T":[9895, 488259334], "N":"core_repaint_begin", "wo":1 }
+{ "T":[9895, 489816089], "N":"core_repaint_posted", "wo":1 }
+{ "T":[9895, 499898819], "N":"core_repaint_finished", "wo":1 }
+{ "T":[9895, 509022493], "N":"core_repaint_exit_loop", "wo":1 }
+{ "T":[9895, 999850087], "N":"core_repaint_req", "wo":1,
+	"C": [
+		{ "f":"weston_view_schedule_repaint", "l":1187, "ws":2 }
+	] }
+{ "T":[9895, 999913992], "N":"core_repaint_enter_loop", "wo":1,
+	"C": [
+		{ "f":"weston_view_schedule_repaint", "l":1187, "ws":2 }
+	] }
+{ "T":[9895, 999985299], "N":"core_repaint_finished", "wo":1 }
+{ "T":[9896, 9172878], "N":"core_repaint_begin", "wo":1 }
+{ "T":[9896, 10204219], "N":"core_repaint_req", "wo":1,
+	"C": [
+		{ "f":"weston_view_schedule_repaint", "l":1187, "ws":2 }
+	] }
+{ "T":[9896, 10256670], "N":"core_repaint_posted", "wo":1 }
+{ "T":[9896, 20304968], "N":"core_repaint_finished", "wo":1 }
+{ "T":[9896, 29458813], "N":"core_repaint_begin", "wo":1 }
+{ "T":[9896, 30347260], "N":"core_repaint_req", "wo":1,
+	"C": [
+		{ "f":"weston_view_schedule_repaint", "l":1187, "ws":2 }
+	] }
+{ "T":[9896, 30412421], "N":"core_repaint_posted", "wo":1 }
+{ "T":[9896, 40394231], "N":"core_repaint_finished", "wo":1 }
+{ "T":[9896, 49545282], "N":"core_repaint_begin", "wo":1 }
+{ "T":[9896, 50344123], "N":"core_repaint_req", "wo":1,
+	"C": [
+		{ "f":"weston_view_schedule_repaint", "l":1187, "ws":2 }
+	] }
+{ "T":[9896, 50415221], "N":"core_repaint_posted", "wo":1 }
+{ "T":[9896, 60388370], "N":"core_repaint_finished", "wo":1 }
+{ "T":[9896, 69584469], "N":"core_repaint_begin", "wo":1 }
+{ "T":[9896, 71506073], "N":"core_repaint_req", "wo":1,
+	"C": [
+		{ "f":"weston_view_schedule_repaint", "l":1187, "ws":2 }
+	] }
+{ "T":[9896, 71580105], "N":"core_repaint_posted", "wo":1 }
+{ "T":[9896, 81550810], "N":"core_repaint_finished", "wo":1 }
+{ "T":[9896, 90712896], "N":"core_repaint_begin", "wo":1 }
+{ "T":[9896, 91486664], "N":"core_repaint_req", "wo":1,
+	"C": [
+		{ "f":"weston_view_schedule_repaint", "l":1187, "ws":2 }
+	] }
+{ "T":[9896, 91558251], "N":"core_repaint_posted", "wo":1 }
+{ "T":[9896, 101544670], "N":"core_repaint_finished", "wo":1 }
+{ "T":[9896, 110669112], "N":"core_repaint_begin", "wo":1 }
+{ "T":[9896, 112385733], "N":"core_repaint_req", "wo":1,
+	"C": [
+		{ "f":"weston_view_schedule_repaint", "l":1187, "ws":2 }
+	] }
+{ "T":[9896, 112442024], "N":"core_repaint_posted", "wo":1 }
+{ "T":[9896, 122488227], "N":"core_repaint_finished", "wo":1 }
+{ "T":[9896, 131592066], "N":"core_repaint_begin", "wo":1 }
+{ "T":[9896, 132305422], "N":"core_repaint_posted", "wo":1 }
+{ "T":[9896, 142363428], "N":"core_repaint_finished", "wo":1 }
+{ "T":[9896, 151523279], "N":"core_repaint_exit_loop", "wo":1 }
+{ "T":[9896, 151606180], "N":"core_repaint_req", "wo":1,
+	"C": [
+		{ "f":"weston_view_schedule_repaint", "l":1187, "ws":2 }
+	] }
+{ "T":[9896, 151641101], "N":"core_repaint_enter_loop", "wo":1,
+	"C": [
+		{ "f":"weston_view_schedule_repaint", "l":1187, "ws":2 }
+	] }
+{ "T":[9896, 151697951], "N":"core_repaint_finished", "wo":1 }
+{ "T":[9896, 160849492], "N":"core_repaint_begin", "wo":1 }
+{ "T":[9896, 161564104], "N":"core_repaint_posted", "wo":1 }
+{ "T":[9896, 171634263], "N":"core_repaint_finished", "wo":1 }
+{ "T":[9896, 180744038], "N":"core_repaint_exit_loop", "wo":1 }
+{ "T":[9896, 180825612], "N":"core_repaint_req", "wo":1,
+	"C": [
+		{ "f":"weston_view_schedule_repaint", "l":1187, "ws":2 }
+	] }
+{ "T":[9896, 180860323], "N":"core_repaint_enter_loop", "wo":1,
+	"C": [
+		{ "f":"weston_view_schedule_repaint", "l":1187, "ws":2 }
+	] }
+{ "T":[9896, 180916196], "N":"core_repaint_finished", "wo":1 }
+{ "T":[9896, 190069971], "N":"core_repaint_begin", "wo":1 }
+{ "T":[9896, 190775365], "N":"core_repaint_req", "wo":1,
+	"C": [
+		{ "f":"weston_view_schedule_repaint", "l":1187, "ws":2 }
+	] }
+{ "T":[9896, 190824673], "N":"core_repaint_posted", "wo":1 }
+{ "T":[9896, 200877860], "N":"core_repaint_finished", "wo":1 }
+{ "T":[9896, 210038759], "N":"core_repaint_begin", "wo":1 }
+{ "T":[9896, 210738635], "N":"core_repaint_req", "wo":1,
+	"C": [
+		{ "f":"weston_view_schedule_repaint", "l":1187, "ws":2 }
+	] }
+{ "T":[9896, 210787454], "N":"core_repaint_posted", "wo":1 }
+{ "T":[9896, 220842666], "N":"core_repaint_finished", "wo":1 }
+{ "T":[9896, 230042187], "N":"core_repaint_begin", "wo":1 }
+{ "T":[9896, 230784457], "N":"core_repaint_posted", "wo":1 }
+{ "T":[9896, 240834501], "N":"core_repaint_finished", "wo":1 }
+{ "T":[9896, 249993794], "N":"core_repaint_exit_loop", "wo":1 }
+{ "T":[9896, 400627822], "N":"core_repaint_req", "wo":1,
+	"C": [
+		{ "f":"weston_surface_schedule_repaint", "l":1174, "ws":3 }
+	] }
+{ "T":[9896, 400679784], "N":"core_repaint_enter_loop", "wo":1,
+	"C": [
+		{ "f":"weston_surface_schedule_repaint", "l":1174, "ws":3 }
+	] }
+{ "T":[9896, 400720431], "N":"core_repaint_finished", "wo":1 }
+{ "T":[9896, 409876860], "N":"core_repaint_begin", "wo":1 }
+{ "T":[9896, 411668909], "N":"core_repaint_posted", "wo":1 }
+{ "T":[9896, 421774547], "N":"core_repaint_finished", "wo":1 }
+{ "T":[9896, 430946131], "N":"core_repaint_exit_loop", "wo":1 }
+{ "T":[9896, 457487232], "N":"core_repaint_req", "wo":1,
+	"C": [
+		{ "f":"weston_surface_schedule_repaint", "l":1174, "ws":3 }
+	] }
+{ "T":[9896, 457544432], "N":"core_repaint_enter_loop", "wo":1,
+	"C": [
+		{ "f":"weston_surface_schedule_repaint", "l":1174, "ws":3 }
+	] }
+{ "T":[9896, 457587245], "N":"core_repaint_finished", "wo":1 }
+{ "T":[9896, 466654277], "N":"core_repaint_begin", "wo":1 }
+{ "T":[9896, 467358414], "N":"core_repaint_posted", "wo":1 }
+{ "T":[9896, 477390369], "N":"core_repaint_finished", "wo":1 }
+{ "T":[9896, 486460056], "N":"core_repaint_exit_loop", "wo":1 }
+{ "id":4, "type":"weston_surface", "desc":"top-level window 'Wayland Terminal'" }
+{ "T":[9896, 495187592], "N":"core_repaint_req", "wo":1,
+	"C": [
+		{ "f":"weston_surface_schedule_repaint", "l":1174, "ws":4 }
+	] }
+{ "id":4, "type":"weston_surface", "desc":"top-level window 'Wayland Terminal'" }
+{ "T":[9896, 495222791], "N":"core_repaint_enter_loop", "wo":1,
+	"C": [
+		{ "f":"weston_surface_schedule_repaint", "l":1174, "ws":4 }
+	] }
+{ "T":[9896, 495253731], "N":"core_repaint_finished", "wo":1 }
+{ "T":[9896, 504391163], "N":"core_repaint_begin", "wo":1 }
+{ "id":4, "type":"weston_surface", "desc":"top-level window 'Wayland Terminal'" }
+{ "T":[9896, 507046377], "N":"core_repaint_req", "wo":1,
+	"C": [
+		{ "f":"weston_view_schedule_repaint", "l":1187, "ws":4 }
+	] }
+{ "T":[9896, 507109164], "N":"core_repaint_posted", "wo":1 }
+{ "T":[9896, 517126802], "N":"core_repaint_finished", "wo":1 }
+{ "T":[9896, 526279879], "N":"core_repaint_begin", "wo":1 }
+{ "id":4, "type":"weston_surface", "desc":"top-level window 'Wayland Terminal'" }
+{ "T":[9896, 528621018], "N":"core_repaint_req", "wo":1,
+	"C": [
+		{ "f":"weston_view_schedule_repaint", "l":1187, "ws":4 }
+	] }
+{ "T":[9896, 528688624], "N":"core_repaint_posted", "wo":1 }
+{ "T":[9896, 538654649], "N":"core_repaint_finished", "wo":1 }
+{ "T":[9896, 547821834], "N":"core_repaint_begin", "wo":1 }
+{ "id":4, "type":"weston_surface", "desc":"top-level window 'pq@farn:~/git/weston'" }
+{ "T":[9896, 550626786], "N":"core_repaint_req", "wo":1,
+	"C": [
+		{ "f":"weston_view_schedule_repaint", "l":1187, "ws":4 }
+	] }
+{ "T":[9896, 550721700], "N":"core_repaint_posted", "wo":1 }
+{ "T":[9896, 560659789], "N":"core_repaint_finished", "wo":1 }
+{ "T":[9896, 569833120], "N":"core_repaint_begin", "wo":1 }
+{ "T":[9896, 570647326], "N":"core_repaint_req", "wo":1,
+	"C": [
+		{ "f":"weston_view_schedule_repaint", "l":1187, "ws":4 }
+	] }
+{ "T":[9896, 570690976], "N":"core_repaint_posted", "wo":1 }
+{ "T":[9896, 580694157], "N":"core_repaint_finished", "wo":1 }
+{ "T":[9896, 589846186], "N":"core_repaint_begin", "wo":1 }
+{ "T":[9896, 590616183], "N":"core_repaint_req", "wo":1,
+	"C": [
+		{ "f":"weston_view_schedule_repaint", "l":1187, "ws":4 }
+	] }
+{ "T":[9896, 590659624], "N":"core_repaint_posted", "wo":1 }
+{ "T":[9896, 600717351], "N":"core_repaint_finished", "wo":1 }
+{ "T":[9896, 609870916], "N":"core_repaint_begin", "wo":1 }
+{ "T":[9896, 610615351], "N":"core_repaint_req", "wo":1,
+	"C": [
+		{ "f":"weston_view_schedule_repaint", "l":1187, "ws":4 }
+	] }
+{ "T":[9896, 610657535], "N":"core_repaint_posted", "wo":1 }
+{ "T":[9896, 620726506], "N":"core_repaint_finished", "wo":1 }
+{ "T":[9896, 629879373], "N":"core_repaint_begin", "wo":1 }
+{ "T":[9896, 630616265], "N":"core_repaint_req", "wo":1,
+	"C": [
+		{ "f":"weston_view_schedule_repaint", "l":1187, "ws":4 }
+	] }
+{ "T":[9896, 630658379], "N":"core_repaint_posted", "wo":1 }
+{ "T":[9896, 640672875], "N":"core_repaint_finished", "wo":1 }
+{ "T":[9896, 649827628], "N":"core_repaint_begin", "wo":1 }
+{ "T":[9896, 650624094], "N":"core_repaint_req", "wo":1,
+	"C": [
+		{ "f":"weston_view_schedule_repaint", "l":1187, "ws":4 }
+	] }
+{ "T":[9896, 650666627], "N":"core_repaint_posted", "wo":1 }
+{ "T":[9896, 660678957], "N":"core_repaint_finished", "wo":1 }
+{ "T":[9896, 669837132], "N":"core_repaint_begin", "wo":1 }
+{ "T":[9896, 670606081], "N":"core_repaint_req", "wo":1,
+	"C": [
+		{ "f":"weston_view_schedule_repaint", "l":1187, "ws":4 }
+	] }
+{ "T":[9896, 670648614], "N":"core_repaint_posted", "wo":1 }
+{ "T":[9896, 680655217], "N":"core_repaint_finished", "wo":1 }
+{ "T":[9896, 689815627], "N":"core_repaint_begin", "wo":1 }
+{ "T":[9896, 690664963], "N":"core_repaint_req", "wo":1,
+	"C": [
+		{ "f":"weston_view_schedule_repaint", "l":1187, "ws":4 }
+	] }
+{ "T":[9896, 690714131], "N":"core_repaint_posted", "wo":1 }
+{ "T":[9896, 700810340], "N":"core_repaint_finished", "wo":1 }
+{ "T":[9896, 709983392], "N":"core_repaint_begin", "wo":1 }
+{ "T":[9896, 711112301], "N":"core_repaint_req", "wo":1,
+	"C": [
+		{ "f":"weston_view_schedule_repaint", "l":1187, "ws":4 }
+	] }
+{ "T":[9896, 711161539], "N":"core_repaint_posted", "wo":1 }
+{ "T":[9896, 721222757], "N":"core_repaint_finished", "wo":1 }
+{ "T":[9896, 730386520], "N":"core_repaint_begin", "wo":1 }
+{ "T":[9896, 733172196], "N":"core_repaint_req", "wo":1,
+	"C": [
+		{ "f":"weston_view_schedule_repaint", "l":1187, "ws":4 }
+	] }
+{ "T":[9896, 733223599], "N":"core_repaint_posted", "wo":1 }
+{ "T":[9896, 743209460], "N":"core_repaint_finished", "wo":1 }
+{ "T":[9896, 752361209], "N":"core_repaint_begin", "wo":1 }
+{ "T":[9896, 753221580], "N":"core_repaint_req", "wo":1,
+	"C": [
+		{ "f":"weston_view_schedule_repaint", "l":1187, "ws":4 }
+	] }
+{ "T":[9896, 753265021], "N":"core_repaint_posted", "wo":1 }
+{ "T":[9896, 763271834], "N":"core_repaint_finished", "wo":1 }
+{ "T":[9896, 772428961], "N":"core_repaint_begin", "wo":1 }
+{ "T":[9896, 773277180], "N":"core_repaint_req", "wo":1,
+	"C": [
+		{ "f":"weston_view_schedule_repaint", "l":1187, "ws":4 }
+	] }
+{ "T":[9896, 773319992], "N":"core_repaint_posted", "wo":1 }
+{ "T":[9896, 783383516], "N":"core_repaint_finished", "wo":1 }
+{ "T":[9896, 792540992], "N":"core_repaint_begin", "wo":1 }
+{ "T":[9896, 793352684], "N":"core_repaint_req", "wo":1,
+	"C": [
+		{ "f":"weston_view_schedule_repaint", "l":1187, "ws":4 }
+	] }
+{ "T":[9896, 793394659], "N":"core_repaint_posted", "wo":1 }
+{ "T":[9896, 803461465], "N":"core_repaint_finished", "wo":1 }
+{ "T":[9896, 812566002], "N":"core_repaint_begin", "wo":1 }
+{ "T":[9896, 813365751], "N":"core_repaint_req", "wo":1,
+	"C": [
+		{ "f":"weston_view_schedule_repaint", "l":1187, "ws":4 }
+	] }
+{ "T":[9896, 813407935], "N":"core_repaint_posted", "wo":1 }
+{ "T":[9896, 823467687], "N":"core_repaint_finished", "wo":1 }
+{ "T":[9896, 832552738], "N":"core_repaint_begin", "wo":1 }
+{ "T":[9896, 833357725], "N":"core_repaint_req", "wo":1,
+	"C": [
+		{ "f":"weston_view_schedule_repaint", "l":1187, "ws":4 }
+	] }
+{ "T":[9896, 833396766], "N":"core_repaint_posted", "wo":1 }
+{ "T":[9896, 843406093], "N":"core_repaint_finished", "wo":1 }
+{ "T":[9896, 852537729], "N":"core_repaint_begin", "wo":1 }
+{ "T":[9896, 853364855], "N":"core_repaint_req", "wo":1,
+	"C": [
+		{ "f":"weston_view_schedule_repaint", "l":1187, "ws":4 }
+	] }
+{ "T":[9896, 853407109], "N":"core_repaint_posted", "wo":1 }
+{ "T":[9896, 863415877], "N":"core_repaint_finished", "wo":1 }
+{ "T":[9896, 872539202], "N":"core_repaint_begin", "wo":1 }
+{ "T":[9896, 873346982], "N":"core_repaint_req", "wo":1,
+	"C": [
+		{ "f":"weston_view_schedule_repaint", "l":1187, "ws":4 }
+	] }
+{ "T":[9896, 873389026], "N":"core_repaint_posted", "wo":1 }
+{ "T":[9896, 883449756], "N":"core_repaint_finished", "wo":1 }
+{ "T":[9896, 892551290], "N":"core_repaint_begin", "wo":1 }
+{ "T":[9896, 893359909], "N":"core_repaint_req", "wo":1,
+	"C": [
+		{ "f":"weston_view_schedule_repaint", "l":1187, "ws":4 }
+	] }
+{ "T":[9896, 893401883], "N":"core_repaint_posted", "wo":1 }
+{ "T":[9896, 903462194], "N":"core_repaint_finished", "wo":1 }
+{ "T":[9896, 912566242], "N":"core_repaint_begin", "wo":1 }
+{ "T":[9896, 913375979], "N":"core_repaint_req", "wo":1,
+	"C": [
+		{ "f":"weston_view_schedule_repaint", "l":1187, "ws":4 }
+	] }
+{ "T":[9896, 913417813], "N":"core_repaint_posted", "wo":1 }
+{ "T":[9896, 923481337], "N":"core_repaint_finished", "wo":1 }
+{ "T":[9896, 932584896], "N":"core_repaint_begin", "wo":1 }
+{ "T":[9896, 933408391], "N":"core_repaint_req", "wo":1,
+	"C": [
+		{ "f":"weston_view_schedule_repaint", "l":1187, "ws":4 }
+	] }
+{ "T":[9896, 933449807], "N":"core_repaint_posted", "wo":1 }
+{ "T":[9896, 943465838], "N":"core_repaint_finished", "wo":1 }
+{ "T":[9896, 952563461], "N":"core_repaint_begin", "wo":1 }
+{ "T":[9896, 953370055], "N":"core_repaint_req", "wo":1,
+	"C": [
+		{ "f":"weston_view_schedule_repaint", "l":1187, "ws":4 }
+	] }
+{ "T":[9896, 953412518], "N":"core_repaint_posted", "wo":1 }
+{ "T":[9896, 963427432], "N":"core_repaint_finished", "wo":1 }
+{ "T":[9896, 972534903], "N":"core_repaint_begin", "wo":1 }
+{ "T":[9896, 973345547], "N":"core_repaint_req", "wo":1,
+	"C": [
+		{ "f":"weston_view_schedule_repaint", "l":1187, "ws":4 }
+	] }
+{ "T":[9896, 973387661], "N":"core_repaint_posted", "wo":1 }
+{ "T":[9896, 983421432], "N":"core_repaint_finished", "wo":1 }
+{ "T":[9896, 992539798], "N":"core_repaint_begin", "wo":1 }
+{ "T":[9896, 993377261], "N":"core_repaint_req", "wo":1,
+	"C": [
+		{ "f":"weston_view_schedule_repaint", "l":1187, "ws":4 }
+	] }
+{ "T":[9896, 993420143], "N":"core_repaint_posted", "wo":1 }
+{ "T":[9897, 3481781], "N":"core_repaint_finished", "wo":1 }
+{ "T":[9897, 12588134], "N":"core_repaint_begin", "wo":1 }
+{ "T":[9897, 13407089], "N":"core_repaint_req", "wo":1,
+	"C": [
+		{ "f":"weston_view_schedule_repaint", "l":1187, "ws":4 }
+	] }
+{ "T":[9897, 13449482], "N":"core_repaint_posted", "wo":1 }
+{ "T":[9897, 23514333], "N":"core_repaint_finished", "wo":1 }
+{ "T":[9897, 32628718], "N":"core_repaint_begin", "wo":1 }
+{ "T":[9897, 33441876], "N":"core_repaint_req", "wo":1,
+	"C": [
+		{ "f":"weston_view_schedule_repaint", "l":1187, "ws":4 }
+	] }
+{ "T":[9897, 33483781], "N":"core_repaint_posted", "wo":1 }
+{ "T":[9897, 43496390], "N":"core_repaint_finished", "wo":1 }
+{ "T":[9897, 52604000], "N":"core_repaint_begin", "wo":1 }
+{ "T":[9897, 53439577], "N":"core_repaint_req", "wo":1,
+	"C": [
+		{ "f":"weston_view_schedule_repaint", "l":1187, "ws":4 }
+	] }
+{ "T":[9897, 53481901], "N":"core_repaint_posted", "wo":1 }
+{ "T":[9897, 63497304], "N":"core_repaint_finished", "wo":1 }
+{ "T":[9897, 72601772], "N":"core_repaint_begin", "wo":1 }
+{ "T":[9897, 73410390], "N":"core_repaint_req", "wo":1,
+	"C": [
+		{ "f":"weston_view_schedule_repaint", "l":1187, "ws":4 }
+	] }
+{ "T":[9897, 73452365], "N":"core_repaint_posted", "wo":1 }
+{ "T":[9897, 83516167], "N":"core_repaint_finished", "wo":1 }
+{ "T":[9897, 92635232], "N":"core_repaint_begin", "wo":1 }
+{ "T":[9897, 93447691], "N":"core_repaint_req", "wo":1,
+	"C": [
+		{ "f":"weston_view_schedule_repaint", "l":1187, "ws":4 }
+	] }
+{ "T":[9897, 93489806], "N":"core_repaint_posted", "wo":1 }
+{ "T":[9897, 103537335], "N":"core_repaint_finished", "wo":1 }
+{ "T":[9897, 112661079], "N":"core_repaint_begin", "wo":1 }
+{ "T":[9897, 113472631], "N":"core_repaint_req", "wo":1,
+	"C": [
+		{ "f":"weston_view_schedule_repaint", "l":1187, "ws":4 }
+	] }
+{ "T":[9897, 113514256], "N":"core_repaint_posted", "wo":1 }
+{ "T":[9897, 123532732], "N":"core_repaint_finished", "wo":1 }
+{ "T":[9897, 132649981], "N":"core_repaint_begin", "wo":1 }
+{ "T":[9897, 133461393], "N":"core_repaint_req", "wo":1,
+	"C": [
+		{ "f":"weston_view_schedule_repaint", "l":1187, "ws":4 }
+	] }
+{ "T":[9897, 133503437], "N":"core_repaint_posted", "wo":1 }
+{ "T":[9897, 143517164], "N":"core_repaint_finished", "wo":1 }
+{ "T":[9897, 152641326], "N":"core_repaint_begin", "wo":1 }
+{ "T":[9897, 153493386], "N":"core_repaint_req", "wo":1,
+	"C": [
+		{ "f":"weston_view_schedule_repaint", "l":1187, "ws":4 }
+	] }
+{ "T":[9897, 153537665], "N":"core_repaint_posted", "wo":1 }
+{ "T":[9897, 163548948], "N":"core_repaint_finished", "wo":1 }
+{ "T":[9897, 172707193], "N":"core_repaint_begin", "wo":1 }
+{ "T":[9897, 173572802], "N":"core_repaint_req", "wo":1,
+	"C": [
+		{ "f":"weston_view_schedule_repaint", "l":1187, "ws":4 }
+	] }
+{ "T":[9897, 173617081], "N":"core_repaint_posted", "wo":1 }
+{ "T":[9897, 183646103], "N":"core_repaint_finished", "wo":1 }
+{ "T":[9897, 192806164], "N":"core_repaint_begin", "wo":1 }
+{ "T":[9897, 193628052], "N":"core_repaint_req", "wo":1,
+	"C": [
+		{ "f":"weston_view_schedule_repaint", "l":1187, "ws":4 }
+	] }
+{ "T":[9897, 193670166], "N":"core_repaint_posted", "wo":1 }
+{ "T":[9897, 203737880], "N":"core_repaint_finished", "wo":1 }
+{ "T":[9897, 212900525], "N":"core_repaint_begin", "wo":1 }
+{ "T":[9897, 214173656], "N":"core_repaint_req", "wo":1,
+	"C": [
+		{ "f":"weston_view_schedule_repaint", "l":1187, "ws":4 }
+	] }
+{ "T":[9897, 214224989], "N":"core_repaint_posted", "wo":1 }
+{ "T":[9897, 224246259], "N":"core_repaint_finished", "wo":1 }
+{ "T":[9897, 233367278], "N":"core_repaint_begin", "wo":1 }
+{ "T":[9897, 233771937], "N":"core_repaint_req", "wo":1,
+	"C": [
+		{ "f":"weston_view_schedule_repaint", "l":1187, "ws":4 }
+	] }
+{ "T":[9897, 233787791], "N":"core_repaint_posted", "wo":1 }
+{ "T":[9897, 243826451], "N":"core_repaint_finished", "wo":1 }
+{ "T":[9897, 252986861], "N":"core_repaint_begin", "wo":1 }
+{ "T":[9897, 253799740], "N":"core_repaint_req", "wo":1,
+	"C": [
+		{ "f":"weston_view_schedule_repaint", "l":1187, "ws":4 }
+	] }
+{ "T":[9897, 253842762], "N":"core_repaint_posted", "wo":1 }
+{ "T":[9897, 263854882], "N":"core_repaint_finished", "wo":1 }
+{ "T":[9897, 273023673], "N":"core_repaint_begin", "wo":1 }
+{ "T":[9897, 273802190], "N":"core_repaint_req", "wo":1,
+	"C": [
+		{ "f":"weston_view_schedule_repaint", "l":1187, "ws":4 }
+	] }
+{ "T":[9897, 273844095], "N":"core_repaint_posted", "wo":1 }
+{ "T":[9897, 283908876], "N":"core_repaint_finished", "wo":1 }
+{ "T":[9897, 293062721], "N":"core_repaint_begin", "wo":1 }
+{ "T":[9897, 293826920], "N":"core_repaint_req", "wo":1,
+	"C": [
+		{ "f":"weston_view_schedule_repaint", "l":1187, "ws":4 }
+	] }
+{ "T":[9897, 293868196], "N":"core_repaint_posted", "wo":1 }
+{ "T":[9897, 303929695], "N":"core_repaint_finished", "wo":1 }
+{ "T":[9897, 313080397], "N":"core_repaint_begin", "wo":1 }
+{ "T":[9897, 313848438], "N":"core_repaint_req", "wo":1,
+	"C": [
+		{ "f":"weston_view_schedule_repaint", "l":1187, "ws":4 }
+	] }
+{ "T":[9897, 313890063], "N":"core_repaint_posted", "wo":1 }
+{ "T":[9897, 323950932], "N":"core_repaint_finished", "wo":1 }
+{ "T":[9897, 333108479], "N":"core_repaint_begin", "wo":1 }
+{ "T":[9897, 333876729], "N":"core_repaint_req", "wo":1,
+	"C": [
+		{ "f":"weston_view_schedule_repaint", "l":1187, "ws":4 }
+	] }
+{ "T":[9897, 333918564], "N":"core_repaint_posted", "wo":1 }
+{ "T":[9897, 343925167], "N":"core_repaint_finished", "wo":1 }
+{ "T":[9897, 353074822], "N":"core_repaint_begin", "wo":1 }
+{ "T":[9897, 353831409], "N":"core_repaint_req", "wo":1,
+	"C": [
+		{ "f":"weston_view_schedule_repaint", "l":1187, "ws":4 }
+	] }
+{ "T":[9897, 353872615], "N":"core_repaint_posted", "wo":1 }
+{ "T":[9897, 363883967], "N":"core_repaint_finished", "wo":1 }
+{ "T":[9897, 373040187], "N":"core_repaint_begin", "wo":1 }
+{ "T":[9897, 373808647], "N":"core_repaint_req", "wo":1,
+	"C": [
+		{ "f":"weston_view_schedule_repaint", "l":1187, "ws":4 }
+	] }
+{ "T":[9897, 373851180], "N":"core_repaint_posted", "wo":1 }
+{ "T":[9897, 383917916], "N":"core_repaint_finished", "wo":1 }
+{ "T":[9897, 393072669], "N":"core_repaint_begin", "wo":1 }
+{ "T":[9897, 393838266], "N":"core_repaint_posted", "wo":1 }
+{ "T":[9897, 403944602], "N":"core_repaint_finished", "wo":1 }
+{ "T":[9897, 413098447], "N":"core_repaint_exit_loop", "wo":1 }
