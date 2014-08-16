@@ -1,5 +1,12 @@
-#layer1 {
+g[class~="delay_line"] path,
+g[class~="submit_line"] path,
+g[class~="gpu_line"] path {
 	stroke: black;
 	stroke-width: 5;
+}
+
+path.axis, path.major_tick {
+	stroke: #444;
+	stroke-width: 1;
 }
 

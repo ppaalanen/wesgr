@@ -29,9 +29,15 @@
 struct svg_context {
 	FILE *fp;
 	struct timespec begin;
+	double width;
+	double height;
 	double nsec_to_x;
 	double offset_x;
 	double line_step_y;
+
+	struct {
+		uint64_t a, b;
+	} time_range;
 
 	double cur_y;
 };
@@ -105,16 +111,28 @@ timespec_sub(struct timespec *r,
 	}
 }
 
-static double
-svg_get_x(struct svg_context *ctx, const struct timespec *ts)
+static uint64_t
+timespec_sub_to_nsec(const struct timespec *a, const struct timespec *b)
 {
 	struct timespec d;
 	uint64_t nsec;
 
-	timespec_sub(&d, ts, &ctx->begin);
+	timespec_sub(&d, a, b);
 	nsec = d.tv_sec * NSEC_PER_SEC + d.tv_nsec;
 
-	return ctx->offset_x + ctx->nsec_to_x * nsec;
+	return nsec;
+}
+
+static double
+svg_get_x_from_nsec(struct svg_context *ctx, uint64_t nsec)
+{
+	return ctx->offset_x + ctx->nsec_to_x * (nsec - ctx->time_range.a);
+}
+
+static double
+svg_get_x(struct svg_context *ctx, const struct timespec *ts)
+{
+	return svg_get_x_from_nsec(ctx, timespec_sub_to_nsec(ts, &ctx->begin));
 }
 
 static int
@@ -133,11 +151,11 @@ line_block_to_svg(struct line_block *lb, struct svg_context *ctx)
 
 static int
 line_graph_to_svg(struct line_graph *linegr, struct svg_context *ctx,
-		  const char *svg_id)
+		  const char *style)
 {
 	struct line_block *lb;
 
-	fprintf(ctx->fp, "<g id=\"%s\">\n", svg_id);
+	fprintf(ctx->fp, "<g class=\"%s\">\n", style);
 
 	for (lb = linegr->block; lb; lb = lb->next)
 		if (line_block_to_svg(lb, ctx) < 0)
@@ -166,8 +184,35 @@ output_graph_to_svg(struct output_graph *og, struct svg_context *ctx)
 	return 0;
 }
 
+static uint64_t
+round_up_nsec(uint64_t nsec, uint64_t ms)
+{
+	uint64_t f = ms * 1000000;
+
+	return (nsec + f - 1) / f * f;
+}
+
+static void
+time_scale_to_svg(struct svg_context *ctx)
+{
+	uint64_t nsec;
+
+	fprintf(ctx->fp, "<path d=\"M %.2f %.2f H %.2f\" class=\"axis\" />\n",
+		svg_get_x_from_nsec(ctx, ctx->time_range.a), ctx->cur_y,
+		svg_get_x_from_nsec(ctx, ctx->time_range.b));
+
+	fprintf(ctx->fp, "<path d=\"");
+	for (nsec = round_up_nsec(ctx->time_range.a, 10);
+	     nsec < ctx->time_range.b; nsec += 10000000) {
+		fprintf(ctx->fp, "M %.2f %.2f V %.2f ",
+			svg_get_x_from_nsec(ctx, nsec), ctx->cur_y,
+			ctx->cur_y + 10.0);
+	}
+	fprintf(ctx->fp, "\" class=\"major_tick\" />\n");
+}
+
 static int
-headers_to_svg(struct svg_context *ctx, int width, int height)
+headers_to_svg(struct svg_context *ctx)
 {
 	FILE *in;
 	char buf[2048];
@@ -179,7 +224,7 @@ headers_to_svg(struct svg_context *ctx, int width, int height)
 		" version=\"1.1\" baseProfile=\"full\">\n"
 		"<defs>\n"
 		"<style type=\"text/css\"><![CDATA[\n",
-		width, height);
+		(int)ctx->width, (int)ctx->height);
 
 	in = fopen("style.css", "r");
 	if (!in)
@@ -210,28 +255,45 @@ footers_to_svg(struct svg_context *ctx)
 	"</svg>\n");
 }
 
+static void
+svg_context_init(struct svg_context *ctx, struct graph_data *gdata)
+{
+	double margin = 10.0;
+	double left_pad = 50.0;
+
+	ctx->time_range.a = 0;
+	ctx->time_range.b = timespec_sub_to_nsec(&gdata->end, &gdata->begin);
+
+	ctx->width = 1300;
+	ctx->height = 400;
+	ctx->begin = gdata->begin;
+	ctx->offset_x = margin + left_pad;
+
+	ctx->nsec_to_x = (ctx->width - 2 * margin - left_pad) /
+			 (ctx->time_range.b - ctx->time_range.a);
+
+	ctx->line_step_y = 20.0;
+
+	ctx->cur_y = 50.5;
+}
+
 int
 graph_data_to_svg(struct graph_data *gdata, const char *filename)
 {
 	struct output_graph *og;
 	struct svg_context ctx;
-	struct timespec d;
-	uint64_t nsec;
+
+	svg_context_init(&ctx, gdata);
 
 	ctx.fp = fopen(filename, "w");
 	if (!ctx.fp)
 		return ERROR;
 
-	ctx.begin = gdata->begin;
-	ctx.offset_x = 10.0;
-	timespec_sub(&d, &gdata->end, &gdata->begin);
-	nsec = d.tv_sec * NSEC_PER_SEC + d.tv_nsec;
-	ctx.nsec_to_x = 1500.0 / nsec;
-	ctx.cur_y = 50.5;
-	ctx.line_step_y = 20.0;
-
-	if (headers_to_svg(&ctx, 1520, 400) < 0)
+	if (headers_to_svg(&ctx) < 0)
 		return ERROR;
+
+	time_scale_to_svg(&ctx);
+	ctx.cur_y += 30.0;
 
 	for (og = gdata->output; og; og = og->next)
 		if (output_graph_to_svg(og, &ctx) < 0)
