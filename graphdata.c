@@ -25,6 +25,7 @@
 #include <stdio.h>
 #include <math.h>
 #include <inttypes.h>
+#include <assert.h>
 
 #include "wesgr.h"
 
@@ -101,6 +102,27 @@ graph_data_time(struct graph_data *gdata, const struct timespec *ts)
 
 #define NSEC_PER_SEC 1000000000
 
+static int
+timespec_cmp(const struct timespec *a, const struct timespec *b)
+{
+	assert(a->tv_nsec >= 0 && a->tv_nsec < NSEC_PER_SEC);
+	assert(b->tv_nsec >= 0 && b->tv_nsec < NSEC_PER_SEC);
+
+	if (a->tv_sec < b->tv_sec)
+		return -1;
+
+	if (a->tv_sec > b->tv_sec)
+		return 1;
+
+	if (a->tv_nsec < b->tv_nsec)
+		return -1;
+
+	if (a->tv_nsec > b->tv_nsec)
+		return 1;
+
+	return 0;
+}
+
 static void
 timespec_sub(struct timespec *r,
 	     const struct timespec *a, const struct timespec *b)
@@ -128,6 +150,12 @@ timespec_sub_to_nsec(const struct timespec *a, const struct timespec *b)
 static double
 svg_get_x_from_nsec(struct svg_context *ctx, uint64_t nsec)
 {
+	if (nsec < ctx->time_range.a)
+		return ctx->offset_x;
+
+	if (nsec > ctx->time_range.b)
+		nsec = ctx->time_range.b;
+
 	return ctx->offset_x + ctx->nsec_to_x * (nsec - ctx->time_range.a);
 }
 
@@ -138,9 +166,29 @@ svg_get_x(struct svg_context *ctx, const struct timespec *ts)
 }
 
 static int
+is_in_range(struct svg_context *ctx, const struct timespec *a,
+	    const struct timespec *b)
+{
+	uint64_t begin, end;
+
+	assert(timespec_cmp(a, b) <= 0);
+
+	if (timespec_cmp(b, &ctx->begin) < 0)
+		return 0;
+
+	begin = timespec_sub_to_nsec(a, &ctx->begin);
+	end = timespec_sub_to_nsec(b, &ctx->begin);
+
+	return !(end < ctx->time_range.a || begin > ctx->time_range.b);
+}
+
+static int
 line_block_to_svg(struct line_block *lb, struct svg_context *ctx)
 {
 	double a, b;
+
+	if (!is_in_range(ctx, &lb->begin, &lb->end))
+		return 0;
 
 	a = svg_get_x(ctx, &lb->begin);
 	b = svg_get_x(ctx, &lb->end);
@@ -295,13 +343,22 @@ footers_to_svg(struct svg_context *ctx)
 }
 
 static void
-svg_context_init(struct svg_context *ctx, struct graph_data *gdata)
+svg_context_init(struct svg_context *ctx, struct graph_data *gdata,
+		 int from_ms, int to_ms)
 {
 	double margin = 10.0;
 	double left_pad = 50.0;
 
-	ctx->time_range.a = 0;
-	ctx->time_range.b = timespec_sub_to_nsec(&gdata->end, &gdata->begin);
+	if (from_ms < 0)
+		ctx->time_range.a = 0;
+	else
+		ctx->time_range.a = (uint64_t)from_ms * 1000000;
+
+	if (to_ms < 0)
+		ctx->time_range.b = timespec_sub_to_nsec(&gdata->end,
+							 &gdata->begin);
+	else
+		ctx->time_range.b = (uint64_t)to_ms * 1000000;
 
 	ctx->width = 1300;
 	ctx->height = 400;
@@ -317,12 +374,13 @@ svg_context_init(struct svg_context *ctx, struct graph_data *gdata)
 }
 
 int
-graph_data_to_svg(struct graph_data *gdata, const char *filename)
+graph_data_to_svg(struct graph_data *gdata, int from_ms, int to_ms,
+		  const char *filename)
 {
 	struct output_graph *og;
 	struct svg_context ctx;
 
-	svg_context_init(&ctx, gdata);
+	svg_context_init(&ctx, gdata, from_ms, to_ms);
 
 	ctx.fp = fopen(filename, "w");
 	if (!ctx.fp)
