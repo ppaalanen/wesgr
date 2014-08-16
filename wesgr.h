@@ -149,5 +149,11 @@ timespec_is_valid(struct timespec *ts)
 	return ts->tv_nsec >= 0;
 }
 
+void
+generic_error(const char *file, int line, const char *func);
+
+#define ERROR ({ generic_error(__FILE__, __LINE__, __func__); -1; })
+#define ERROR_NULL ({ generic_error(__FILE__, __LINE__, __func__); NULL; })
+
 #endif /* WESGR_H */
 

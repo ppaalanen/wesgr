@@ -130,7 +130,7 @@ line_graph_to_svg(struct line_graph *linegr, struct svg_context *ctx)
 
 	for (lb = linegr->block; lb; lb = lb->next)
 		if (line_block_to_svg(lb, ctx) < 0)
-			return -1;
+			return ERROR;
 
 	return 0;
 }
@@ -151,7 +151,7 @@ graph_data_to_svg(struct graph_data *gdata, const char *filename)
 
 	ctx.fp = fopen(filename, "w");
 	if (!ctx.fp)
-		return -1;
+		return ERROR;
 
 	ctx.begin = gdata->begin;
 	ctx.offset_x = 10.0;
@@ -161,10 +161,10 @@ graph_data_to_svg(struct graph_data *gdata, const char *filename)
 
 	for (og = gdata->output; og; og = og->next)
 		if (output_graph_to_svg(og, &ctx) < 0)
-			return -1;
+			return ERROR;
 
 	if (fclose(ctx.fp) != 0)
-		return -1;
+		return ERROR;
 
 	return 0;
 }

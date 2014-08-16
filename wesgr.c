@@ -61,7 +61,7 @@ bytebuf_ensure(struct bytebuf *bb, size_t sz)
 
 	data = realloc(bb->data, sz);
 	if (!data)
-		return -1;
+		return ERROR;
 
 	bb->data = data;
 	bb->alloc = sz;
@@ -75,11 +75,11 @@ bytebuf_read_from_file(struct bytebuf *bb, FILE *fp, size_t sz)
 	size_t ret;
 
 	if (bytebuf_ensure(bb, sz) < 0)
-		return -1;
+		return ERROR;
 
 	ret = fread(bb->data, 1, sz, fp);
 	if (ferror(fp))
-		return -1;
+		return ERROR;
 
 	bb->len = ret;
 	bb->pos = 0;
@@ -99,7 +99,7 @@ parse_file(const char *name, struct parse_context *ctx)
 	bytebuf_init(&bb);
 	jtok = json_tokener_new();
 	if (!jtok)
-		return -1;
+		return ERROR;
 
 	fp = fopen(name, "r");
 	if (!fp)
@@ -147,6 +147,8 @@ out_release:
 	bytebuf_release(&bb);
 	json_tokener_free(jtok);
 
+	if (ret == -1)
+		return ERROR;
 	return ret;
 }
 
@@ -175,5 +177,11 @@ main(int argc, char *argv[])
 	graph_data_release(&gdata);
 
 	return 0;
+}
+
+void
+generic_error(const char *file, int line, const char *func)
+{
+	fprintf(stderr, "Error in %s(), %s:%d\n", func, file, line);
 }
 

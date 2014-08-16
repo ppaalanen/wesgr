@@ -48,7 +48,7 @@ get_output_graph(struct parse_context *ctx, struct object_info *output)
 
 	og = calloc(1, sizeof *og);
 	if (!og)
-		return NULL;
+		return ERROR_NULL;
 
 	timespec_invalidate(&og->last_req);
 	timespec_invalidate(&og->last_finished);
@@ -71,7 +71,7 @@ line_block_create(struct line_graph *linegr, const struct timespec *begin,
 
 	lb = calloc(1, sizeof *lb);
 	if (!lb)
-		return NULL;
+		return ERROR_NULL;
 
 	lb->begin = *begin;
 	lb->end = *end;
@@ -92,7 +92,7 @@ core_repaint_begin(struct parse_context *ctx, const struct timespec *ts,
 	output = get_object_info_from_timepoint(ctx, jobj, "wo");
 	og = get_output_graph(ctx, output);
 	if (!og)
-		return -1;
+		return ERROR;
 
 	og->last_begin = *ts;
 
@@ -102,7 +102,7 @@ core_repaint_begin(struct parse_context *ctx, const struct timespec *ts,
 		lb = line_block_create(&og->repaint_line, &og->last_finished,
 				       ts, "repaint_delay");
 		if (!lb)
-			return -1;
+			return ERROR;
 	}
 
 	return 0;
@@ -118,7 +118,7 @@ core_repaint_posted(struct parse_context *ctx, const struct timespec *ts,
 	output = get_object_info_from_timepoint(ctx, jobj, "wo");
 	og = get_output_graph(ctx, output);
 	if (!og)
-		return -1;
+		return ERROR;
 
 	og->last_posted = *ts;
 
@@ -128,7 +128,7 @@ core_repaint_posted(struct parse_context *ctx, const struct timespec *ts,
 		lb = line_block_create(&og->repaint_line, &og->last_begin,
 				       ts, "repaint_submit");
 		if (!lb)
-			return -1;
+			return ERROR;
 	}
 
 	return 0;
@@ -144,7 +144,7 @@ core_repaint_finished(struct parse_context *ctx, const struct timespec *ts,
 	output = get_object_info_from_timepoint(ctx, jobj, "wo");
 	og = get_output_graph(ctx, output);
 	if (!og)
-		return -1;
+		return ERROR;
 
 	og->last_finished = *ts;
 
@@ -154,7 +154,7 @@ core_repaint_finished(struct parse_context *ctx, const struct timespec *ts,
 		lb = line_block_create(&og->repaint_line, &og->last_posted,
 				       ts, "repaint_gpu");
 		if (!lb)
-			return -1;
+			return ERROR;
 	}
 
 	return 0;
@@ -170,7 +170,7 @@ core_repaint_req(struct parse_context *ctx, const struct timespec *ts,
 	output = get_object_info_from_timepoint(ctx, jobj, "wo");
 	og = get_output_graph(ctx, output);
 	if (!og)
-		return -1;
+		return ERROR;
 
 	og->last_req = *ts;
 

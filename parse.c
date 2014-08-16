@@ -48,11 +48,11 @@ lookup_table_ensure(struct lookup_table *tbl, unsigned n)
 
 	n = (n / 512 + 1) * 512;
 	if (n <= tbl->alloc)
-		return -1;
+		return ERROR;
 
 	arr = realloc(tbl->array, n * sizeof(void *));
 	if (!arr)
-		return -1;
+		return ERROR;
 
 	for (i = tbl->alloc; i < n; i++)
 		arr[i] = NULL;
@@ -87,7 +87,7 @@ lookup_table_set(struct lookup_table *tbl, unsigned id, void *data)
 
 	i = id - tbl->id_base;
 	if (lookup_table_ensure(tbl, i + 1) < 0)
-		return -1;
+		return ERROR;
 
 	tbl->array[i] = data;
 
@@ -141,7 +141,7 @@ parse_context_create_object_info(struct parse_context *ctx, unsigned id,
 
 	oi = calloc(1, sizeof *oi);
 	if (!oi)
-		return NULL;
+		return ERROR_NULL;
 
 	oi->id = id;
 	oi->type = type;
@@ -171,7 +171,7 @@ get_object_type(enum object_type *type, const char *type_name)
 		}
 	}
 
-	return -1;
+	return ERROR;
 }
 
 static int
@@ -180,7 +180,7 @@ parse_weston_output(struct parse_context *ctx, struct object_info *oi)
 	struct json_object *name_jobj;
 
 	if (!json_object_object_get_ex(oi->jobj, "name", &name_jobj))
-		return -1;
+		return ERROR;
 
 	oi->info.wo.name = json_object_get_string(name_jobj);
 
@@ -193,7 +193,7 @@ parse_weston_surface(struct parse_context *ctx, struct object_info *oi)
 	struct json_object *desc_jobj;
 
 	if (!json_object_object_get_ex(oi->jobj, "desc", &desc_jobj))
-		return -1;
+		return ERROR;
 
 	oi->info.ws.description = json_object_get_string(desc_jobj);
 
@@ -213,20 +213,20 @@ parse_context_process_info(struct parse_context *ctx,
 	errno = 0;
 	id = json_object_get_int64(id_jobj);
 	if (errno)
-		return -1;
+		return ERROR;
 
 	if (!json_object_object_get_ex(jobj, "type", &type_jobj))
-		return -1;
+		return ERROR;
 
 	if (!json_object_is_type(type_jobj, json_type_string))
-		return -1;
+		return ERROR;
 
 	if (get_object_type(&type, json_object_get_string(type_jobj)) < 0)
-		return -1;
+		return ERROR;
 
 	oi = parse_context_create_object_info(ctx, id, type, jobj);
 	if (lookup_table_set(&ctx->idmap, id, oi) < 0)
-		return -1;
+		return ERROR;
 
 	switch (oi->type) {
 	case TYPE_WESTON_OUTPUT:
@@ -244,12 +244,12 @@ parse_int(int64_t *r, struct json_object *jobj)
 	int64_t value;
 
 	if (!jobj || !json_object_is_type(jobj, json_type_int))
-		return -1;
+		return ERROR;
 
 	errno = 0;
 	value = json_object_get_int64(jobj);
 	if (errno)
-		return -1;
+		return ERROR;
 
 	*r = value;
 	return 0;
@@ -262,17 +262,17 @@ parse_timespec(struct timespec *ts_out, struct json_object *jobj)
 	struct timespec ts;
 
 	if (!json_object_is_type(jobj, json_type_array))
-		return -1;
+		return ERROR;
 
 	if (json_object_array_length(jobj) != 2)
-		return -1;
+		return ERROR;
 
 	if (parse_int(&v, json_object_array_get_idx(jobj, 0)) < 0)
-		return -1;
+		return ERROR;
 	ts.tv_sec = v;
 
 	if (parse_int(&v, json_object_array_get_idx(jobj, 1)) < 0)
-		return -1;
+		return ERROR;
 	ts.tv_nsec = v;
 
 	*ts_out = ts;
@@ -291,13 +291,13 @@ parse_context_process_timepoint(struct parse_context *ctx,
 	unsigned i;
 
 	if (parse_timespec(&ts, T_jobj) < 0)
-		return -1;
+		return ERROR;
 
 	if (!json_object_object_get_ex(jobj, "N", &name_jobj))
-		return -1;
+		return ERROR;
 
 	if (!json_object_is_type(name_jobj, json_type_string))
-		return -1;
+		return ERROR;
 
 	graph_data_time(ctx->gdata, &ts);
 	name = json_object_get_string(name_jobj);
@@ -317,7 +317,7 @@ parse_context_process_object(struct parse_context *ctx,
 	struct json_object *key_obj;
 
 	if (!json_object_is_type(jobj, json_type_object))
-		return -1;
+		return ERROR;
 
 	if (json_object_object_get_ex(jobj, "id", &key_obj))
 		return parse_context_process_info(ctx, jobj, key_obj);
@@ -325,7 +325,7 @@ parse_context_process_object(struct parse_context *ctx,
 	if (json_object_object_get_ex(jobj, "T", &key_obj))
 		return parse_context_process_timepoint(ctx, jobj, key_obj);
 
-	return -1;
+	return ERROR;
 }
 
 struct object_info *
@@ -337,10 +337,10 @@ get_object_info_from_timepoint(struct parse_context *ctx,
 	unsigned id;
 
 	if (!json_object_object_get_ex(jobj, member, &mem_jobj))
-		return NULL;
+		return ERROR_NULL;
 
 	if (parse_int(&value, mem_jobj) < 0)
-		return NULL;
+		return ERROR_NULL;
 	id = value;
 
 	return lookup_table_get(&ctx->idmap, id);
