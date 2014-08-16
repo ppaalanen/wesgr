@@ -1,5 +1,6 @@
 *.o
 *.swp
-wesgr
-config.mk
+/*.svg
+/wesgr
+/config.mk
 

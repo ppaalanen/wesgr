@@ -149,16 +149,22 @@ graph_data_to_svg(struct graph_data *gdata, const char *filename)
 	struct timespec d;
 	uint64_t nsec;
 
-	ctx.fp = stdout;
+	ctx.fp = fopen(filename, "w");
+	if (!ctx.fp)
+		return -1;
+
 	ctx.begin = gdata->begin;
 	ctx.offset_x = 10.0;
 	timespec_sub(&d, &gdata->end, &gdata->begin);
 	nsec = d.tv_sec * NSEC_PER_SEC + d.tv_nsec;
-	ctx.nsec_to_x = 500.0 / nsec;
+	ctx.nsec_to_x = 1500.0 / nsec;
 
 	for (og = gdata->output; og; og = og->next)
 		if (output_graph_to_svg(og, &ctx) < 0)
 			return -1;
+
+	if (fclose(ctx.fp) != 0)
+		return -1;
 
 	return 0;
 }
