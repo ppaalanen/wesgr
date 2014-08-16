@@ -48,7 +48,10 @@ struct line_graph {
 struct output_graph {
 	struct info_weston_output *info;
 	struct output_graph *next;
-	struct line_graph repaint_line;
+
+	struct line_graph delay_line;
+	struct line_graph submit_line;
+	struct line_graph gpu_line;
 
 	struct timespec last_req;
 	struct timespec last_finished;

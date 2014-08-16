@@ -99,7 +99,7 @@ core_repaint_begin(struct parse_context *ctx, const struct timespec *ts,
 	if (timespec_is_valid(&og->last_finished)) {
 		struct line_block *lb;
 
-		lb = line_block_create(&og->repaint_line, &og->last_finished,
+		lb = line_block_create(&og->delay_line, &og->last_finished,
 				       ts, "repaint_delay");
 		if (!lb)
 			return ERROR;
@@ -125,7 +125,7 @@ core_repaint_posted(struct parse_context *ctx, const struct timespec *ts,
 	if (timespec_is_valid(&og->last_begin)) {
 		struct line_block *lb;
 
-		lb = line_block_create(&og->repaint_line, &og->last_begin,
+		lb = line_block_create(&og->submit_line, &og->last_begin,
 				       ts, "repaint_submit");
 		if (!lb)
 			return ERROR;
@@ -151,7 +151,7 @@ core_repaint_finished(struct parse_context *ctx, const struct timespec *ts,
 	if (timespec_is_valid(&og->last_posted)) {
 		struct line_block *lb;
 
-		lb = line_block_create(&og->repaint_line, &og->last_posted,
+		lb = line_block_create(&og->gpu_line, &og->last_posted,
 				       ts, "repaint_gpu");
 		if (!lb)
 			return ERROR;

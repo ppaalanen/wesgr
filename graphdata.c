@@ -31,6 +31,7 @@ struct svg_context {
 	struct timespec begin;
 	double nsec_to_x;
 	double offset_x;
+	double line_step_y;
 
 	double cur_y;
 };
@@ -65,7 +66,9 @@ line_graph_release(struct line_graph *linegr)
 static void
 output_graph_destroy(struct output_graph *og)
 {
-	line_graph_release(&og->repaint_line);
+	line_graph_release(&og->delay_line);
+	line_graph_release(&og->submit_line);
+	line_graph_release(&og->gpu_line);
 	free(og);
 }
 
@@ -129,13 +132,18 @@ line_block_to_svg(struct line_block *lb, struct svg_context *ctx)
 }
 
 static int
-line_graph_to_svg(struct line_graph *linegr, struct svg_context *ctx)
+line_graph_to_svg(struct line_graph *linegr, struct svg_context *ctx,
+		  const char *svg_id)
 {
 	struct line_block *lb;
+
+	fprintf(ctx->fp, "<g id=\"%s\">\n", svg_id);
 
 	for (lb = linegr->block; lb; lb = lb->next)
 		if (line_block_to_svg(lb, ctx) < 0)
 			return ERROR;
+
+	fprintf(ctx->fp, "</g>\n");
 
 	return 0;
 }
@@ -143,7 +151,19 @@ line_graph_to_svg(struct line_graph *linegr, struct svg_context *ctx)
 static int
 output_graph_to_svg(struct output_graph *og, struct svg_context *ctx)
 {
-	return line_graph_to_svg(&og->repaint_line, ctx);
+	if (line_graph_to_svg(&og->delay_line, ctx, "delay_line") < 0)
+		return ERROR;
+	ctx->cur_y += ctx->line_step_y;
+
+	if (line_graph_to_svg(&og->submit_line, ctx, "submit_line") < 0)
+		return ERROR;
+	ctx->cur_y += ctx->line_step_y;
+
+	if (line_graph_to_svg(&og->gpu_line, ctx, "gpu_line") < 0)
+		return ERROR;
+	ctx->cur_y += ctx->line_step_y;
+
+	return 0;
 }
 
 static void
@@ -191,6 +211,7 @@ graph_data_to_svg(struct graph_data *gdata, const char *filename)
 	nsec = d.tv_sec * NSEC_PER_SEC + d.tv_nsec;
 	ctx.nsec_to_x = 1500.0 / nsec;
 	ctx.cur_y = 50.5;
+	ctx.line_step_y = 20.0;
 
 	headers_to_svg(&ctx, 1520, 400);
 
