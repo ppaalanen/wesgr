@@ -200,12 +200,14 @@ line_block_to_svg(struct line_block *lb, struct svg_context *ctx)
 }
 
 static int
-line_graph_to_svg(struct line_graph *linegr, struct svg_context *ctx,
-		  const char *style)
+line_graph_to_svg(struct line_graph *linegr, struct svg_context *ctx)
 {
 	struct line_block *lb;
 
-	fprintf(ctx->fp, "<g class=\"%s\">\n", style);
+	fprintf(ctx->fp, "<g class=\"%s\">\n", linegr->style);
+	fprintf(ctx->fp,
+		"<text x=\"10\" y=\"%.2f\" class=\"line_label\">%s</text>\n",
+		ctx->cur_y + 5.0, linegr->label);
 
 	for (lb = linegr->block; lb; lb = lb->next)
 		if (line_block_to_svg(lb, ctx) < 0)
@@ -219,15 +221,15 @@ line_graph_to_svg(struct line_graph *linegr, struct svg_context *ctx,
 static int
 output_graph_to_svg(struct output_graph *og, struct svg_context *ctx)
 {
-	if (line_graph_to_svg(&og->delay_line, ctx, "delay_line") < 0)
+	if (line_graph_to_svg(&og->delay_line, ctx) < 0)
 		return ERROR;
 	ctx->cur_y += ctx->line_step_y;
 
-	if (line_graph_to_svg(&og->submit_line, ctx, "submit_line") < 0)
+	if (line_graph_to_svg(&og->submit_line, ctx) < 0)
 		return ERROR;
 	ctx->cur_y += ctx->line_step_y;
 
-	if (line_graph_to_svg(&og->gpu_line, ctx, "gpu_line") < 0)
+	if (line_graph_to_svg(&og->gpu_line, ctx) < 0)
 		return ERROR;
 	ctx->cur_y += ctx->line_step_y;
 
@@ -353,8 +355,8 @@ static void
 svg_context_init(struct svg_context *ctx, struct graph_data *gdata,
 		 int from_ms, int to_ms)
 {
-	double margin = 10.0;
-	double left_pad = 50.0;
+	const double margin = 10.0;
+	const double left_pad = 250.0;
 
 	if (from_ms < 0)
 		ctx->time_range.a = 0;

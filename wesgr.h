@@ -43,6 +43,8 @@ struct line_block {
 
 struct line_graph {
 	struct line_block *block;
+	const char *style;
+	const char *label;
 };
 
 struct output_graph {

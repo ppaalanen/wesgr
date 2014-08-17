@@ -31,6 +31,14 @@
 
 #include "wesgr.h"
 
+static void
+line_graph_init(struct line_graph *lg, const char *style, const char *label)
+{
+	lg->block = NULL;
+	lg->style = style;
+	lg->label = label;
+}
+
 static struct output_graph *
 get_output_graph(struct parse_context *ctx, struct object_info *output)
 {
@@ -49,6 +57,10 @@ get_output_graph(struct parse_context *ctx, struct object_info *output)
 	og = calloc(1, sizeof *og);
 	if (!og)
 		return ERROR_NULL;
+
+	line_graph_init(&og->delay_line, "delay_line", "delay before repaint");
+	line_graph_init(&og->submit_line, "submit_line", "output_repaint()");
+	line_graph_init(&og->gpu_line, "gpu_line", "time to hit presentation");
 
 	timespec_invalidate(&og->last_req);
 	timespec_invalidate(&og->last_finished);
