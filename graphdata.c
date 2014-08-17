@@ -249,9 +249,11 @@ time_scale_to_svg(struct svg_context *ctx)
 	uint64_t big_skip = NSEC_PER_SEC;
 	uint64_t lil_skip;
 	unsigned i;
+	double left, right;
 	const double big_tick_size = 15.0;
 	const double lil_tick_size = 10.0;
 	const double tick_label_up = 5.0;
+	const double axis_label_up = 25.0;
 
 	skip_ms = round(50.0 / ctx->nsec_to_x * 1e-6);
 	for (i = 0; i < ARRAY_LENGTH(mtick_levels); i++) {
@@ -293,9 +295,14 @@ time_scale_to_svg(struct svg_context *ctx)
 	}
 	fprintf(ctx->fp, "\" class=\"minor_tick\" />\n");
 
+	left = svg_get_x_from_nsec(ctx, ctx->time_range.a);
+	right = svg_get_x_from_nsec(ctx, ctx->time_range.b);
 	fprintf(ctx->fp, "<path d=\"M %.2f %.2f H %.2f\" class=\"axis\" />\n",
-		svg_get_x_from_nsec(ctx, ctx->time_range.a), ctx->cur_y,
-		svg_get_x_from_nsec(ctx, ctx->time_range.b));
+		left, ctx->cur_y, right);
+
+	fprintf(ctx->fp, "<text x=\"%.2f\" y=\"%.2f\" text-anchor=\"middle\""
+		" class=\"axis_label\">time (ms)</text>\n",
+		(left + right) / 2.0, ctx->cur_y - axis_label_up);
 }
 
 static int
