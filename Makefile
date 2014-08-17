@@ -31,6 +31,9 @@ config.mk: Makefile
 	echo "DEP_CFLAGS=`pkg-config --cflags '$(PKG_DEPS)'`" > $@ && \
 	echo "DEP_LIBS=`pkg-config --libs '$(PKG_DEPS)'`" >> $@
 
+graph.svg: $(EXE)
+	./$(EXE) testdata/timeline-1.log
+
 %.o: %.c
 	$(M_V_CC)$(CC) $(CFLAGS) $(CPPFLAGS) -c -o $@ $<
 
