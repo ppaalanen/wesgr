@@ -193,8 +193,8 @@ static int
 debug_handler(struct parse_context *ctx,
 	      const struct timespec *ts, struct json_object *jobj)
 {
-	printf("%" PRId64 ".%09ld %s\n", (int64_t)ts->tv_sec, ts->tv_nsec,
-	       json_object_get_string(jobj));
+	/*printf("%" PRId64 ".%09ld %s\n", (int64_t)ts->tv_sec, ts->tv_nsec,
+	       json_object_get_string(jobj));*/
 
 	return 0;
 }
