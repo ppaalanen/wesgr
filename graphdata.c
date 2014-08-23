@@ -206,8 +206,10 @@ line_graph_to_svg(struct line_graph *linegr, struct svg_context *ctx)
 
 	fprintf(ctx->fp, "<g class=\"%s\">\n", linegr->style);
 	fprintf(ctx->fp,
-		"<text x=\"10\" y=\"%.2f\" class=\"line_label\">%s</text>\n",
-		ctx->cur_y + 5.0, linegr->label);
+		"<text x=\"10\" y=\"0.5em\" "
+		"transform=\"translate(0,%.2f)\" "
+		"class=\"line_label\">%s</text>\n",
+		ctx->cur_y, linegr->label);
 
 	for (lb = linegr->block; lb; lb = lb->next)
 		if (line_block_to_svg(lb, ctx) < 0)
@@ -255,7 +257,6 @@ time_scale_to_svg(struct svg_context *ctx)
 	const double big_tick_size = 15.0;
 	const double lil_tick_size = 10.0;
 	const double tick_label_up = 5.0;
-	const double axis_label_up = 25.0;
 
 	skip_ms = round(50.0 / ctx->nsec_to_x * 1e-6);
 	for (i = 0; i < ARRAY_LENGTH(mtick_levels); i++) {
@@ -302,9 +303,10 @@ time_scale_to_svg(struct svg_context *ctx)
 	fprintf(ctx->fp, "<path d=\"M %.2f %.2f H %.2f\" class=\"axis\" />\n",
 		left, ctx->cur_y, right);
 
-	fprintf(ctx->fp, "<text x=\"%.2f\" y=\"%.2f\" text-anchor=\"middle\""
+	fprintf(ctx->fp, "<text x=\"%.2f\" y=\"-1.5em\" text-anchor=\"middle\""
+		" transform=\"translate(0,%.2f)\""
 		" class=\"axis_label\">time (ms)</text>\n",
-		(left + right) / 2.0, ctx->cur_y - axis_label_up);
+		(left + right) / 2.0, ctx->cur_y - tick_label_up);
 }
 
 static int
