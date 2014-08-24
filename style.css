@@ -10,6 +10,16 @@ g[class~="gpu_line"] path {
 	stroke-width: 5;
 }
 
+g[class~="trans_begin"] path {
+	stroke: green;
+	stroke-width: 1;
+}
+
+g[class~="trans_begin"] circle {
+	stroke-width: 0;
+	fill: green;
+}
+
 path.axis, path.major_tick {
 	stroke: #000;
 	stroke-width: 1;

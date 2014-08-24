@@ -31,6 +31,29 @@
 
 #include "wesgr.h"
 
+static struct transition *
+transition_create(struct transition_set *tset, const struct timespec *ts)
+{
+	struct transition *trans;
+
+	trans = calloc(1, sizeof *trans);
+	if (!trans)
+		return ERROR_NULL;
+
+	trans->ts = *ts;
+	trans->next = tset->trans;
+	tset->trans = trans;
+
+	return trans;
+}
+
+static void
+transition_set_init(struct transition_set *tset, const char *style)
+{
+	tset->trans = NULL;
+	tset->style = style;
+}
+
 static void
 line_graph_init(struct line_graph *lg, const char *style, const char *label)
 {
@@ -61,6 +84,7 @@ get_output_graph(struct parse_context *ctx, struct object_info *output)
 	line_graph_init(&og->delay_line, "delay_line", "delay before repaint");
 	line_graph_init(&og->submit_line, "submit_line", "output_repaint()");
 	line_graph_init(&og->gpu_line, "gpu_line", "time to hit presentation");
+	transition_set_init(&og->begins, "trans_begin");
 
 	timespec_invalidate(&og->last_req);
 	timespec_invalidate(&og->last_finished);
@@ -110,10 +134,15 @@ core_repaint_begin(struct parse_context *ctx, const struct timespec *ts,
 
 	if (timespec_is_valid(&og->last_finished)) {
 		struct line_block *lb;
+		struct transition *trans;
 
 		lb = line_block_create(&og->delay_line, &og->last_finished,
 				       ts, "repaint_delay");
 		if (!lb)
+			return ERROR;
+
+		trans = transition_create(&og->begins, ts);
+		if (!trans)
 			return ERROR;
 	}
 

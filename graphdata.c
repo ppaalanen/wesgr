@@ -55,6 +55,23 @@ graph_data_init(struct graph_data *gdata)
 }
 
 static void
+transition_destroy(struct transition *tr)
+{
+	free(tr);
+}
+
+static void
+transition_set_release(struct transition_set *tset)
+{
+	struct transition *tr, *tmp;
+
+	for (tr = tset->trans; tr; tr = tmp) {
+		tmp = tr->next;
+		transition_destroy(tr);
+	}
+}
+
+static void
 line_block_destroy(struct line_block *bl)
 {
 	free(bl->desc);
@@ -78,6 +95,7 @@ output_graph_destroy(struct output_graph *og)
 	line_graph_release(&og->delay_line);
 	line_graph_release(&og->submit_line);
 	line_graph_release(&og->gpu_line);
+	transition_set_release(&og->begins);
 	free(og);
 }
 
@@ -221,6 +239,39 @@ line_graph_to_svg(struct line_graph *linegr, struct svg_context *ctx)
 }
 
 static int
+transition_to_svg(struct transition *tr, struct svg_context *ctx)
+{
+	double t;
+
+	if (!is_in_range(ctx, &tr->ts, &tr->ts))
+		return 0;
+
+	t = svg_get_x(ctx, &tr->ts);
+	fprintf(ctx->fp, "<path d=\"M %.2f %.2f V %.2f\" />"
+		"<circle cx=\"%.2f\" cy=\"%.2f\" r=\"5\" />\n",
+		t, ctx->cur_y, ctx->cur_y + 10.0,
+		t, ctx->cur_y);
+
+	return 0;
+}
+
+static int
+transition_set_to_svg(struct transition_set *tset, struct svg_context *ctx)
+{
+	struct transition *tr;
+
+	fprintf(ctx->fp, "<g class=\"%s\">\n", tset->style);
+
+	for (tr = tset->trans; tr; tr = tr->next)
+		if (transition_to_svg(tr, ctx) < 0)
+			return ERROR;
+
+	fprintf(ctx->fp, "</g>\n");
+
+	return 0;
+}
+
+static int
 output_graph_to_svg(struct output_graph *og, struct svg_context *ctx)
 {
 	if (line_graph_to_svg(&og->delay_line, ctx) < 0)
@@ -234,6 +285,9 @@ output_graph_to_svg(struct output_graph *og, struct svg_context *ctx)
 	if (line_graph_to_svg(&og->gpu_line, ctx) < 0)
 		return ERROR;
 	ctx->cur_y += ctx->line_step_y;
+
+	if (transition_set_to_svg(&og->begins, ctx) < 0)
+		return ERROR;
 
 	return 0;
 }
