@@ -117,6 +117,8 @@ core_repaint_begin(struct parse_context *ctx, const struct timespec *ts,
 			return ERROR;
 	}
 
+	timespec_invalidate(&og->last_finished);
+
 	return 0;
 }
 
@@ -143,6 +145,8 @@ core_repaint_posted(struct parse_context *ctx, const struct timespec *ts,
 			return ERROR;
 	}
 
+	timespec_invalidate(&og->last_begin);
+
 	return 0;
 }
 
@@ -168,6 +172,8 @@ core_repaint_finished(struct parse_context *ctx, const struct timespec *ts,
 		if (!lb)
 			return ERROR;
 	}
+
+	timespec_invalidate(&og->last_posted);
 
 	return 0;
 }
