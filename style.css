@@ -40,6 +40,11 @@ g[class~="vblank"] circle {
 	fill: #b00;
 }
 
+g[class~="not_looping"] path {
+	fill: #ddd;
+	stroke-width: 0;
+}
+
 path.axis, path.major_tick {
 	stroke: #000;
 	stroke-width: 1;

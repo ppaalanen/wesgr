@@ -31,6 +31,30 @@
 
 #include "wesgr.h"
 
+static struct activity *
+activity_create(struct activity_set *acts,
+		const struct timespec *begin, const struct timespec *end)
+{
+	struct activity *act;
+
+	act = calloc(1, sizeof *act);
+	if (!act)
+		return ERROR_NULL;
+
+	act->begin = *begin;
+	act->end = *end;
+	act->next = acts->act;
+	acts->act = act;
+
+	return act;
+}
+
+static void
+activity_set_init(struct activity_set *acs)
+{
+	acs->act = NULL;
+}
+
 static struct vblank *
 vblank_create(struct vblank_set *vblanks, const struct timespec *vbl_time)
 {
@@ -109,11 +133,13 @@ get_output_graph(struct parse_context *ctx, struct object_info *output)
 	transition_set_init(&og->begins, "trans_begin");
 	transition_set_init(&og->posts, "trans_post");
 	vblank_set_init(&og->vblanks);
+	activity_set_init(&og->not_looping);
 
 	timespec_invalidate(&og->last_req);
 	timespec_invalidate(&og->last_finished);
 	timespec_invalidate(&og->last_begin);
 	timespec_invalidate(&og->last_posted);
+	timespec_invalidate(&og->last_exit_loop);
 	og->info = wo;
 	og->next = ctx->gdata->output;
 	ctx->gdata->output = og;
@@ -260,18 +286,50 @@ core_repaint_req(struct parse_context *ctx, const struct timespec *ts,
 }
 
 static int
-debug_handler(struct parse_context *ctx,
-	      const struct timespec *ts, struct json_object *jobj)
+core_repaint_exit_loop(struct parse_context *ctx, const struct timespec *ts,
+		       struct json_object *jobj)
 {
-	/*printf("%" PRId64 ".%09ld %s\n", (int64_t)ts->tv_sec, ts->tv_nsec,
-	       json_object_get_string(jobj));*/
+	struct object_info *output;
+	struct output_graph *og;
+
+	output = get_object_info_from_timepoint(ctx, jobj, "wo");
+	og = get_output_graph(ctx, output);
+	if (!og)
+		return ERROR;
+
+	og->last_exit_loop = *ts;
+
+	return 0;
+}
+
+static int
+core_repaint_enter_loop(struct parse_context *ctx, const struct timespec *ts,
+			struct json_object *jobj)
+{
+	struct object_info *output;
+	struct output_graph *og;
+	struct activity *act;
+
+	output = get_object_info_from_timepoint(ctx, jobj, "wo");
+	og = get_output_graph(ctx, output);
+	if (!og)
+		return ERROR;
+
+	if (!timespec_is_valid(&og->last_exit_loop)) {
+		og->last_exit_loop.tv_sec = 0;
+		og->last_exit_loop.tv_nsec = 0;
+	}
+
+	act = activity_create(&og->not_looping, &og->last_exit_loop, ts);
+	if (!act)
+		return ERROR;
 
 	return 0;
 }
 
 const struct tp_handler_item tp_handler_list[] = {
-	{ "core_repaint_enter_loop", debug_handler },
-	{ "core_repaint_exit_loop", debug_handler },
+	{ "core_repaint_enter_loop", core_repaint_enter_loop },
+	{ "core_repaint_exit_loop", core_repaint_exit_loop },
 	{ "core_repaint_finished", core_repaint_finished },
 	{ "core_repaint_begin", core_repaint_begin },
 	{ "core_repaint_posted", core_repaint_posted },

@@ -33,6 +33,16 @@ struct json_object;
 struct info_weston_output;
 struct info_weston_surface;
 
+struct activity {
+	struct timespec begin;
+	struct timespec end;
+	struct activity *next;
+};
+
+struct activity_set {
+	struct activity *act;
+};
+
 struct vblank {
 	struct timespec ts;
 	struct vblank *next;
@@ -78,6 +88,7 @@ struct output_graph {
 	struct transition_set begins;
 	struct transition_set posts;
 	struct vblank_set vblanks;
+	struct activity_set not_looping;
 
 	double y1, y2;
 
@@ -85,6 +96,7 @@ struct output_graph {
 	struct timespec last_finished;
 	struct timespec last_begin;
 	struct timespec last_posted;
+	struct timespec last_exit_loop;
 };
 
 struct graph_data {

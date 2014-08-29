@@ -52,6 +52,23 @@ graph_data_init(struct graph_data *gdata)
 }
 
 static void
+activity_destroy(struct activity *act)
+{
+	free(act);
+}
+
+static void
+activity_set_release(struct activity_set *acts)
+{
+	struct activity *act, *tmp;
+
+	for (act = acts->act; act; act = tmp) {
+		tmp = act->next;
+		activity_destroy(act);
+	}
+}
+
+static void
 vblank_destroy(struct vblank *vbl)
 {
 	free(vbl);
@@ -112,6 +129,7 @@ output_graph_destroy(struct output_graph *og)
 	transition_set_release(&og->begins);
 	transition_set_release(&og->posts);
 	vblank_set_release(&og->vblanks);
+	activity_set_release(&og->not_looping);
 	free(og);
 }
 
@@ -322,8 +340,46 @@ vblank_set_to_svg(struct vblank_set *vblanks, struct svg_context *ctx,
 }
 
 static int
+activity_to_svg(struct activity *act, struct svg_context *ctx,
+		double y1, double y2)
+{
+	double a, b;
+
+	if (!is_in_range(ctx, &act->begin, &act->end))
+		return 0;
+
+	a = svg_get_x(ctx, &act->begin);
+	b = svg_get_x(ctx, &act->end);
+	fprintf(ctx->fp,
+		"<path d=\"M %.2f %.2f H %.2f V %.2f H %.2f Z\" />\n",
+		a, y1, b, y2, a);
+
+	return 0;
+}
+
+static int
+activity_set_to_svg(struct activity_set *acts, struct svg_context *ctx,
+		    double y1, double y2)
+{
+	struct activity *act;
+
+	fprintf(ctx->fp, "<g class=\"not_looping\">\n");
+
+	for (act = acts->act; act; act = act->next)
+		if (activity_to_svg(act, ctx, y1, y2) < 0)
+			return ERROR;
+
+	fprintf(ctx->fp, "</g>\n");
+
+	return 0;
+}
+
+static int
 output_graph_to_svg(struct output_graph *og, struct svg_context *ctx)
 {
+	if (activity_set_to_svg(&og->not_looping, ctx, og->y1, og->y2) < 0)
+		return ERROR;
+
 	if (vblank_set_to_svg(&og->vblanks, ctx, og->y1, og->y2) < 0)
 		return ERROR;
 
