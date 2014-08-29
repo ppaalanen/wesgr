@@ -19,3 +19,7 @@ for installing.
 
 It creates `graph.svg`.
 
+## Example output
+
+![example output in SVG](examples/graph.svg "An example graph produced by Wesgr")
+
