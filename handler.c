@@ -31,6 +31,28 @@
 
 #include "wesgr.h"
 
+static struct vblank *
+vblank_create(struct vblank_set *vblanks, const struct timespec *vbl_time)
+{
+	struct vblank *vbl;
+
+	vbl = calloc(1, sizeof *vbl);
+	if (!vbl)
+		return ERROR_NULL;
+
+	vbl->ts = *vbl_time;
+	vbl->next = vblanks->vbl;
+	vblanks->vbl = vbl;
+
+	return vbl;
+}
+
+static void
+vblank_set_init(struct vblank_set *vblanks)
+{
+	vblanks->vbl = NULL;
+}
+
 static struct transition *
 transition_create(struct transition_set *tset, const struct timespec *ts)
 {
@@ -86,6 +108,7 @@ get_output_graph(struct parse_context *ctx, struct object_info *output)
 	line_graph_init(&og->gpu_line, "gpu_line", "time to hit presentation");
 	transition_set_init(&og->begins, "trans_begin");
 	transition_set_init(&og->posts, "trans_post");
+	vblank_set_init(&og->vblanks);
 
 	timespec_invalidate(&og->last_req);
 	timespec_invalidate(&og->last_finished);
@@ -201,10 +224,16 @@ core_repaint_finished(struct parse_context *ctx, const struct timespec *ts,
 
 	if (timespec_is_valid(&og->last_posted)) {
 		struct line_block *lb;
+		struct vblank *vbl;
 
 		lb = line_block_create(&og->gpu_line, &og->last_posted,
 				       ts, "repaint_gpu");
 		if (!lb)
+			return ERROR;
+
+		/* XXX: use the real vblank time, not ts */
+		vbl = vblank_create(&og->vblanks, ts);
+		if (!vbl)
 			return ERROR;
 	}
 

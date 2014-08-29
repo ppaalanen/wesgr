@@ -52,6 +52,23 @@ graph_data_init(struct graph_data *gdata)
 }
 
 static void
+vblank_destroy(struct vblank *vbl)
+{
+	free(vbl);
+}
+
+static void
+vblank_set_release(struct vblank_set *vblanks)
+{
+	struct vblank *vbl, *tmp;
+
+	for (vbl = vblanks->vbl; vbl; vbl = tmp) {
+		tmp = vbl->next;
+		vblank_destroy(vbl);
+	}
+}
+
+static void
 transition_destroy(struct transition *tr)
 {
 	free(tr);
@@ -94,6 +111,7 @@ output_graph_destroy(struct output_graph *og)
 	line_graph_release(&og->gpu_line);
 	transition_set_release(&og->begins);
 	transition_set_release(&og->posts);
+	vblank_set_release(&og->vblanks);
 	free(og);
 }
 
@@ -270,8 +288,45 @@ transition_set_to_svg(struct transition_set *tset, struct svg_context *ctx,
 }
 
 static int
+vblank_to_svg(struct vblank *vbl, struct svg_context *ctx,
+	      double y1, double y2)
+{
+	double t;
+
+	if (!is_in_range(ctx, &vbl->ts, &vbl->ts))
+		return 0;
+
+	t = svg_get_x(ctx, &vbl->ts);
+	fprintf(ctx->fp, "<path d=\"M %.2f %.2f V %.2f\" />"
+		"<circle cx=\"%.2f\" cy=\"%.2f\" r=\"3\" />\n",
+		t, y1, y2, t, y1);
+
+	return 0;
+}
+
+static int
+vblank_set_to_svg(struct vblank_set *vblanks, struct svg_context *ctx,
+		      double y1, double y2)
+{
+	struct vblank *vbl;
+
+	fprintf(ctx->fp, "<g class=\"vblank\">\n");
+
+	for (vbl = vblanks->vbl; vbl; vbl = vbl->next)
+		if (vblank_to_svg(vbl, ctx, y1, y2) < 0)
+			return ERROR;
+
+	fprintf(ctx->fp, "</g>\n");
+
+	return 0;
+}
+
+static int
 output_graph_to_svg(struct output_graph *og, struct svg_context *ctx)
 {
+	if (vblank_set_to_svg(&og->vblanks, ctx, og->y1, og->y2) < 0)
+		return ERROR;
+
 	if (line_graph_to_svg(&og->delay_line, ctx) < 0)
 		return ERROR;
 
@@ -444,6 +499,8 @@ graph_data_init_draw(struct graph_data *gdata, double *width, double *height)
 	y += 30.0;
 
 	for (og = gdata->output; og; og = og->next) {
+		og->y1 = y - 10.0;
+
 		og->delay_line.y = y;
 		y += line_step;
 
@@ -452,6 +509,8 @@ graph_data_init_draw(struct graph_data *gdata, double *width, double *height)
 
 		og->gpu_line.y = y;
 		y += line_step;
+
+		og->y2 = y + 10.0;
 
 		y += output_margin;
 	}

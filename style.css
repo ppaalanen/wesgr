@@ -30,6 +30,16 @@ g[class~="trans_post"] circle {
 	fill: blue;
 }
 
+g[class~="vblank"] path {
+	stroke: #b00;
+	stroke-width: 1;
+}
+
+g[class~="vblank"] circle {
+	stroke-width: 0;
+	fill: #b00;
+}
+
 path.axis, path.major_tick {
 	stroke: #000;
 	stroke-width: 1;

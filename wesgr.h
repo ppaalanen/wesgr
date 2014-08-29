@@ -33,6 +33,15 @@ struct json_object;
 struct info_weston_output;
 struct info_weston_surface;
 
+struct vblank {
+	struct timespec ts;
+	struct vblank *next;
+};
+
+struct vblank_set {
+	struct vblank *vbl;
+};
+
 struct transition {
 	struct timespec ts;
 	struct transition *next;
@@ -68,6 +77,9 @@ struct output_graph {
 	struct line_graph gpu_line;
 	struct transition_set begins;
 	struct transition_set posts;
+	struct vblank_set vblanks;
+
+	double y1, y2;
 
 	struct timespec last_req;
 	struct timespec last_finished;
