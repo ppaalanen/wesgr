@@ -170,7 +170,7 @@ main(int argc, char *argv[])
 	if (parse_file(argv[1], &ctx) < 0)
 		return 1;
 
-	if (graph_data_to_svg(&gdata, 413, 700, "graph.svg") < 0)
+	if (graph_data_to_svg(&gdata, 413, 620, "graph.svg") < 0)
 		return 1;
 
 	parse_context_release(&ctx);

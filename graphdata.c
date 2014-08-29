@@ -36,13 +36,10 @@ struct svg_context {
 	double height;
 	double nsec_to_x;
 	double offset_x;
-	double line_step_y;
 
 	struct {
 		uint64_t a, b;
 	} time_range;
-
-	double cur_y;
 };
 
 int
@@ -201,7 +198,7 @@ is_in_range(struct svg_context *ctx, const struct timespec *a,
 }
 
 static int
-line_block_to_svg(struct line_block *lb, struct svg_context *ctx)
+line_block_to_svg(struct line_block *lb, struct svg_context *ctx, double y)
 {
 	double a, b;
 
@@ -210,9 +207,7 @@ line_block_to_svg(struct line_block *lb, struct svg_context *ctx)
 
 	a = svg_get_x(ctx, &lb->begin);
 	b = svg_get_x(ctx, &lb->end);
-
-	fprintf(ctx->fp, "<path d=\"M %.2f %.2f H %.2f\" />\n",
-		a, ctx->cur_y, b);
+	fprintf(ctx->fp, "<path d=\"M %.2f %.2f H %.2f\" />\n", a, y, b);
 
 	return 0;
 }
@@ -227,10 +222,10 @@ line_graph_to_svg(struct line_graph *linegr, struct svg_context *ctx)
 		"<text x=\"10\" y=\"0.5em\" "
 		"transform=\"translate(0,%.2f)\" "
 		"class=\"line_label\">%s</text>\n",
-		ctx->cur_y, linegr->label);
+		linegr->y, linegr->label);
 
 	for (lb = linegr->block; lb; lb = lb->next)
-		if (line_block_to_svg(lb, ctx) < 0)
+		if (line_block_to_svg(lb, ctx, linegr->y) < 0)
 			return ERROR;
 
 	fprintf(ctx->fp, "</g>\n");
@@ -239,7 +234,8 @@ line_graph_to_svg(struct line_graph *linegr, struct svg_context *ctx)
 }
 
 static int
-transition_to_svg(struct transition *tr, struct svg_context *ctx)
+transition_to_svg(struct transition *tr, struct svg_context *ctx,
+		  double y1, double y2)
 {
 	double t;
 
@@ -248,22 +244,23 @@ transition_to_svg(struct transition *tr, struct svg_context *ctx)
 
 	t = svg_get_x(ctx, &tr->ts);
 	fprintf(ctx->fp, "<path d=\"M %.2f %.2f V %.2f\" />"
-		"<circle cx=\"%.2f\" cy=\"%.2f\" r=\"5\" />\n",
-		t, ctx->cur_y, ctx->cur_y + 10.0,
-		t, ctx->cur_y);
+		"<circle cx=\"%.2f\" cy=\"%.2f\" r=\"3\" />\n",
+		t, y1, y2,
+		t, (y1 + y2) * 0.5);
 
 	return 0;
 }
 
 static int
-transition_set_to_svg(struct transition_set *tset, struct svg_context *ctx)
+transition_set_to_svg(struct transition_set *tset, struct svg_context *ctx,
+		      double y1, double y2)
 {
 	struct transition *tr;
 
 	fprintf(ctx->fp, "<g class=\"%s\">\n", tset->style);
 
 	for (tr = tset->trans; tr; tr = tr->next)
-		if (transition_to_svg(tr, ctx) < 0)
+		if (transition_to_svg(tr, ctx, y1, y2) < 0)
 			return ERROR;
 
 	fprintf(ctx->fp, "</g>\n");
@@ -276,17 +273,15 @@ output_graph_to_svg(struct output_graph *og, struct svg_context *ctx)
 {
 	if (line_graph_to_svg(&og->delay_line, ctx) < 0)
 		return ERROR;
-	ctx->cur_y += ctx->line_step_y;
 
 	if (line_graph_to_svg(&og->submit_line, ctx) < 0)
 		return ERROR;
-	ctx->cur_y += ctx->line_step_y;
 
 	if (line_graph_to_svg(&og->gpu_line, ctx) < 0)
 		return ERROR;
-	ctx->cur_y += ctx->line_step_y;
 
-	if (transition_set_to_svg(&og->begins, ctx) < 0)
+	if (transition_set_to_svg(&og->begins, ctx,
+				  og->delay_line.y, og->submit_line.y) < 0)
 		return ERROR;
 
 	return 0;
@@ -299,7 +294,7 @@ round_up(uint64_t nsec, uint64_t f)
 }
 
 static void
-time_scale_to_svg(struct svg_context *ctx)
+time_scale_to_svg(struct svg_context *ctx, double y)
 {
 	uint64_t nsec;
 	uint64_t skip_ms;
@@ -325,8 +320,7 @@ time_scale_to_svg(struct svg_context *ctx)
 	for (nsec = round_up(ctx->time_range.a, big_skip);
 	     nsec < ctx->time_range.b; nsec += big_skip) {
 		fprintf(ctx->fp, "M %.2f %.2f V %.2f ",
-			svg_get_x_from_nsec(ctx, nsec), ctx->cur_y,
-			ctx->cur_y + big_tick_size);
+			svg_get_x_from_nsec(ctx, nsec), y, y + big_tick_size);
 	}
 	fprintf(ctx->fp, "\" class=\"major_tick\" />\n");
 
@@ -336,8 +330,7 @@ time_scale_to_svg(struct svg_context *ctx)
 			" text-anchor=\"middle\""
 			" class=\"tick_label\">%" PRIu64 "</text>\n",
 			svg_get_x_from_nsec(ctx, nsec),
-			ctx->cur_y - tick_label_up,
-			nsec / 1000000);
+			y - tick_label_up, nsec / 1000000);
 	}
 
 	fprintf(ctx->fp, "<path d=\"");
@@ -347,20 +340,19 @@ time_scale_to_svg(struct svg_context *ctx)
 			continue;
 
 		fprintf(ctx->fp, "M %.2f %.2f V %.2f ",
-			svg_get_x_from_nsec(ctx, nsec), ctx->cur_y,
-			ctx->cur_y + lil_tick_size);
+			svg_get_x_from_nsec(ctx, nsec), y, y + lil_tick_size);
 	}
 	fprintf(ctx->fp, "\" class=\"minor_tick\" />\n");
 
 	left = svg_get_x_from_nsec(ctx, ctx->time_range.a);
 	right = svg_get_x_from_nsec(ctx, ctx->time_range.b);
 	fprintf(ctx->fp, "<path d=\"M %.2f %.2f H %.2f\" class=\"axis\" />\n",
-		left, ctx->cur_y, right);
+		left, y, right);
 
 	fprintf(ctx->fp, "<text x=\"%.2f\" y=\"-1.5em\" text-anchor=\"middle\""
 		" transform=\"translate(0,%.2f)\""
 		" class=\"axis_label\">time (ms)</text>\n",
-		(left + right) / 2.0, ctx->cur_y - tick_label_up);
+		(left + right) / 2.0, y - tick_label_up);
 }
 
 static int
@@ -409,7 +401,7 @@ footers_to_svg(struct svg_context *ctx)
 
 static void
 svg_context_init(struct svg_context *ctx, struct graph_data *gdata,
-		 int from_ms, int to_ms)
+		 int from_ms, int to_ms, double width, double height)
 {
 	const double margin = 10.0;
 	const double left_pad = 250.0;
@@ -425,17 +417,41 @@ svg_context_init(struct svg_context *ctx, struct graph_data *gdata,
 	else
 		ctx->time_range.b = (uint64_t)to_ms * 1000000;
 
-	ctx->width = 1300;
-	ctx->height = 400;
+	ctx->width = width;
+	ctx->height = height;
 	ctx->begin = gdata->begin;
 	ctx->offset_x = margin + left_pad;
 
 	ctx->nsec_to_x = (ctx->width - 2 * margin - left_pad) /
 			 (ctx->time_range.b - ctx->time_range.a);
+}
 
-	ctx->line_step_y = 20.0;
+static void
+graph_data_init_draw(struct graph_data *gdata, double *width, double *height)
+{
+	struct output_graph *og;
+	const double line_step = 20.0;
+	const double output_margin = 30.0;
+	double y = 50.5;
 
-	ctx->cur_y = 50.5;
+	gdata->time_axis_y = y;
+	y += 30.0;
+
+	for (og = gdata->output; og; og = og->next) {
+		og->delay_line.y = y;
+		y += line_step;
+
+		og->submit_line.y = y;
+		y += line_step;
+
+		og->gpu_line.y = y;
+		y += line_step;
+
+		y += output_margin;
+	}
+
+	*width = 1300;
+	*height = y + line_step;
 }
 
 int
@@ -444,8 +460,10 @@ graph_data_to_svg(struct graph_data *gdata, int from_ms, int to_ms,
 {
 	struct output_graph *og;
 	struct svg_context ctx;
+	double w, h;
 
-	svg_context_init(&ctx, gdata, from_ms, to_ms);
+	graph_data_init_draw(gdata, &w, &h);
+	svg_context_init(&ctx, gdata, from_ms, to_ms, w, h);
 
 	ctx.fp = fopen(filename, "w");
 	if (!ctx.fp)
@@ -454,8 +472,7 @@ graph_data_to_svg(struct graph_data *gdata, int from_ms, int to_ms,
 	if (headers_to_svg(&ctx) < 0)
 		return ERROR;
 
-	time_scale_to_svg(&ctx);
-	ctx.cur_y += 30.0;
+	time_scale_to_svg(&ctx, gdata->time_axis_y);
 
 	for (og = gdata->output; og; og = og->next)
 		if (output_graph_to_svg(og, &ctx) < 0)

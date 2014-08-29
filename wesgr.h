@@ -55,6 +55,8 @@ struct line_graph {
 	struct line_block *block;
 	const char *style;
 	const char *label;
+
+	double y;
 };
 
 struct output_graph {
@@ -77,6 +79,8 @@ struct graph_data {
 
 	struct timespec begin;
 	struct timespec end;
+
+	double time_axis_y;
 };
 
 enum object_type {
