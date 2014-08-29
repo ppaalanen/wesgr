@@ -21,5 +21,8 @@ It creates `graph.svg`.
 
 ## Example output
 
-![example output in SVG](examples/graph.svg "An example graph produced by Wesgr")
+[Example output as SVG code](examples/graph.svg)
+
+<object data="examples/graph.svg?raw=true" type="image/svg+xml">Embedding
+SVG image did not work here.</object>
 
