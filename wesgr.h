@@ -67,6 +67,7 @@ struct output_graph {
 	struct line_graph submit_line;
 	struct line_graph gpu_line;
 	struct transition_set begins;
+	struct transition_set posts;
 
 	struct timespec last_req;
 	struct timespec last_finished;

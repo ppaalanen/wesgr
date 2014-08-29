@@ -85,6 +85,7 @@ get_output_graph(struct parse_context *ctx, struct object_info *output)
 	line_graph_init(&og->submit_line, "submit_line", "output_repaint()");
 	line_graph_init(&og->gpu_line, "gpu_line", "time to hit presentation");
 	transition_set_init(&og->begins, "trans_begin");
+	transition_set_init(&og->posts, "trans_post");
 
 	timespec_invalidate(&og->last_req);
 	timespec_invalidate(&og->last_finished);
@@ -167,10 +168,15 @@ core_repaint_posted(struct parse_context *ctx, const struct timespec *ts,
 
 	if (timespec_is_valid(&og->last_begin)) {
 		struct line_block *lb;
+		struct transition *trans;
 
 		lb = line_block_create(&og->submit_line, &og->last_begin,
 				       ts, "repaint_submit");
 		if (!lb)
+			return ERROR;
+
+		trans = transition_create(&og->posts, ts);
+		if (!trans)
 			return ERROR;
 	}
 

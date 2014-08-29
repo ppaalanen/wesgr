@@ -93,6 +93,7 @@ output_graph_destroy(struct output_graph *og)
 	line_graph_release(&og->submit_line);
 	line_graph_release(&og->gpu_line);
 	transition_set_release(&og->begins);
+	transition_set_release(&og->posts);
 	free(og);
 }
 
@@ -282,6 +283,10 @@ output_graph_to_svg(struct output_graph *og, struct svg_context *ctx)
 
 	if (transition_set_to_svg(&og->begins, ctx,
 				  og->delay_line.y, og->submit_line.y) < 0)
+		return ERROR;
+
+	if (transition_set_to_svg(&og->posts, ctx,
+				  og->submit_line.y, og->gpu_line.y) < 0)
 		return ERROR;
 
 	return 0;

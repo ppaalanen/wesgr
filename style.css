@@ -11,13 +11,23 @@ g[class~="gpu_line"] path {
 }
 
 g[class~="trans_begin"] path {
-	stroke: green;
+	stroke: black;
 	stroke-width: 1;
 }
 
 g[class~="trans_begin"] circle {
 	stroke-width: 0;
 	fill: green;
+}
+
+g[class~="trans_post"] path {
+	stroke: black;
+	stroke-width: 1;
+}
+
+g[class~="trans_post"] circle {
+	stroke-width: 0;
+	fill: blue;
 }
 
 path.axis, path.major_tick {
