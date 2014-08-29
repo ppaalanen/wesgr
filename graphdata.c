@@ -318,14 +318,14 @@ time_scale_to_svg(struct svg_context *ctx, double y)
 
 	fprintf(ctx->fp, "<path d=\"");
 	for (nsec = round_up(ctx->time_range.a, big_skip);
-	     nsec < ctx->time_range.b; nsec += big_skip) {
+	     nsec <= ctx->time_range.b; nsec += big_skip) {
 		fprintf(ctx->fp, "M %.2f %.2f V %.2f ",
 			svg_get_x_from_nsec(ctx, nsec), y, y + big_tick_size);
 	}
 	fprintf(ctx->fp, "\" class=\"major_tick\" />\n");
 
 	for (nsec = round_up(ctx->time_range.a, big_skip);
-	     nsec < ctx->time_range.b; nsec += big_skip) {
+	     nsec <= ctx->time_range.b; nsec += big_skip) {
 		fprintf(ctx->fp, "<text x=\"%.2f\" y=\"%.2f\""
 			" text-anchor=\"middle\""
 			" class=\"tick_label\">%" PRIu64 "</text>\n",
@@ -335,7 +335,7 @@ time_scale_to_svg(struct svg_context *ctx, double y)
 
 	fprintf(ctx->fp, "<path d=\"");
 	for (nsec = round_up(ctx->time_range.a, lil_skip);
-	     nsec < ctx->time_range.b; nsec += lil_skip) {
+	     nsec <= ctx->time_range.b; nsec += lil_skip) {
 		if (nsec % big_skip == 0)
 			continue;
 
@@ -403,8 +403,9 @@ static void
 svg_context_init(struct svg_context *ctx, struct graph_data *gdata,
 		 int from_ms, int to_ms, double width, double height)
 {
-	const double margin = 10.0;
+	const double margin = 5.0;
 	const double left_pad = 250.0;
+	const double right_pad = 20.0;
 
 	if (from_ms < 0)
 		ctx->time_range.a = 0;
@@ -422,7 +423,7 @@ svg_context_init(struct svg_context *ctx, struct graph_data *gdata,
 	ctx->begin = gdata->begin;
 	ctx->offset_x = margin + left_pad;
 
-	ctx->nsec_to_x = (ctx->width - 2 * margin - left_pad) /
+	ctx->nsec_to_x = (ctx->width - 2 * margin - left_pad - right_pad) /
 			 (ctx->time_range.b - ctx->time_range.a);
 }
 
