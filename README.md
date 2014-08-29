@@ -21,8 +21,6 @@ It creates `graph.svg`.
 
 ## Example output
 
-[Example output as SVG code](examples/graph.svg)
-
-<object data="examples/graph.svg?raw=true" type="image/svg+xml">Embedding
-SVG image did not work here.</object>
+![Example output of Wesgr](http://ppaalanen.github.io/wesgr/examples/graph.svg
+"Some timings from Weston's x11 backend")
 
