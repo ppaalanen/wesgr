@@ -1,0 +1,148 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1300" height="190" version="1.1" baseProfile="full">
+<defs>
+<style type="text/css"><![CDATA[
+text {
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: 12px;
+}
+
+g[class~="delay_line"] path,
+g[class~="submit_line"] path,
+g[class~="gpu_line"] path {
+	stroke: black;
+	stroke-width: 5;
+}
+
+g[class~="trans_begin"] path {
+	stroke: black;
+	stroke-width: 1;
+}
+
+g[class~="trans_begin"] circle {
+	stroke-width: 0;
+	fill: green;
+}
+
+g[class~="trans_post"] path {
+	stroke: black;
+	stroke-width: 1;
+}
+
+g[class~="trans_post"] circle {
+	stroke-width: 0;
+	fill: blue;
+}
+
+g[class~="vblank"] path {
+	stroke: #b00;
+	stroke-width: 1;
+}
+
+g[class~="vblank"] circle {
+	stroke-width: 0;
+	fill: #b00;
+}
+
+g[class~="not_looping"] path {
+	fill: #ddd;
+	stroke-width: 0;
+}
+
+path.axis, path.major_tick {
+	stroke: #000;
+	stroke-width: 1;
+}
+
+path.minor_tick {
+	stroke: #888;
+	stroke-width: 1;
+}
+
+text.tick_label {
+}
+
+]]></style>
+</defs>
+<rect width="100%" height="100%" fill="white" />
+<g id="layer1">
+<path d="M 289.49 50.50 V 65.50 M 388.04 50.50 V 65.50 M 486.59 50.50 V 65.50 M 585.14 50.50 V 65.50 M 683.70 50.50 V 65.50 M 782.25 50.50 V 65.50 M 880.80 50.50 V 65.50 M 979.35 50.50 V 65.50 M 1077.90 50.50 V 65.50 M 1176.45 50.50 V 65.50 M 1275.00 50.50 V 65.50 " class="major_tick" />
+<text x="289.49" y="45.50" text-anchor="middle" class="tick_label">420</text>
+<text x="388.04" y="45.50" text-anchor="middle" class="tick_label">440</text>
+<text x="486.59" y="45.50" text-anchor="middle" class="tick_label">460</text>
+<text x="585.14" y="45.50" text-anchor="middle" class="tick_label">480</text>
+<text x="683.70" y="45.50" text-anchor="middle" class="tick_label">500</text>
+<text x="782.25" y="45.50" text-anchor="middle" class="tick_label">520</text>
+<text x="880.80" y="45.50" text-anchor="middle" class="tick_label">540</text>
+<text x="979.35" y="45.50" text-anchor="middle" class="tick_label">560</text>
+<text x="1077.90" y="45.50" text-anchor="middle" class="tick_label">580</text>
+<text x="1176.45" y="45.50" text-anchor="middle" class="tick_label">600</text>
+<text x="1275.00" y="45.50" text-anchor="middle" class="tick_label">620</text>
+<path d="M 269.78 50.50 V 60.50 M 309.20 50.50 V 60.50 M 328.91 50.50 V 60.50 M 348.62 50.50 V 60.50 M 368.33 50.50 V 60.50 M 407.75 50.50 V 60.50 M 427.46 50.50 V 60.50 M 447.17 50.50 V 60.50 M 466.88 50.50 V 60.50 M 506.30 50.50 V 60.50 M 526.01 50.50 V 60.50 M 545.72 50.50 V 60.50 M 565.43 50.50 V 60.50 M 604.86 50.50 V 60.50 M 624.57 50.50 V 60.50 M 644.28 50.50 V 60.50 M 663.99 50.50 V 60.50 M 703.41 50.50 V 60.50 M 723.12 50.50 V 60.50 M 742.83 50.50 V 60.50 M 762.54 50.50 V 60.50 M 801.96 50.50 V 60.50 M 821.67 50.50 V 60.50 M 841.38 50.50 V 60.50 M 861.09 50.50 V 60.50 M 900.51 50.50 V 60.50 M 920.22 50.50 V 60.50 M 939.93 50.50 V 60.50 M 959.64 50.50 V 60.50 M 999.06 50.50 V 60.50 M 1018.77 50.50 V 60.50 M 1038.48 50.50 V 60.50 M 1058.19 50.50 V 60.50 M 1097.61 50.50 V 60.50 M 1117.32 50.50 V 60.50 M 1137.03 50.50 V 60.50 M 1156.74 50.50 V 60.50 M 1196.16 50.50 V 60.50 M 1215.87 50.50 V 60.50 M 1235.58 50.50 V 60.50 M 1255.29 50.50 V 60.50 " class="minor_tick" />
+<path d="M 255.00 50.50 H 1275.00" class="axis" />
+<text x="765.00" y="-1.5em" text-anchor="middle" transform="translate(0,45.50)" class="axis_label">time (ms)</text>
+<g class="not_looping">
+<path d="M 1201.94 70.50 H 1275.00 V 150.50 H 1201.94 Z" />
+<path d="M 980.49 70.50 H 1057.98 V 150.50 H 980.49 Z" />
+<path d="M 836.20 70.50 H 836.80 V 150.50 H 836.20 Z" />
+</g>
+<g class="vblank">
+<path d="M 1156.74 70.50 V 150.50" /><circle cx="1156.74" cy="70.50" r="3" />
+<path d="M 935.36 70.50 V 150.50" /><circle cx="935.36" cy="70.50" r="3" />
+<path d="M 791.06 70.50 V 150.50" /><circle cx="791.06" cy="70.50" r="3" />
+<path d="M 692.69 70.50 V 150.50" /><circle cx="692.69" cy="70.50" r="3" />
+<path d="M 594.41 70.50 V 150.50" /><circle cx="594.41" cy="70.50" r="3" />
+<path d="M 491.31 70.50 V 150.50" /><circle cx="491.31" cy="70.50" r="3" />
+<path d="M 388.92 70.50 V 150.50" /><circle cx="388.92" cy="70.50" r="3" />
+<path d="M 290.43 70.50 V 150.50" /><circle cx="290.43" cy="70.50" r="3" />
+</g>
+<g class="delay_line">
+<text x="10" y="0.5em" transform="translate(0,80.50)" class="line_label">delay before repaint</text>
+<path d="M 1058.28 80.50 H 1103.39" />
+<path d="M 837.08 80.50 H 882.39" />
+<path d="M 692.69 80.50 H 737.82" />
+<path d="M 594.41 80.50 H 639.55" />
+<path d="M 491.31 80.50 H 536.47" />
+<path d="M 388.92 80.50 H 434.08" />
+<path d="M 290.43 80.50 H 335.57" />
+</g>
+<g class="submit_line">
+<text x="10" y="0.5em" transform="translate(0,100.50)" class="line_label">output_repaint()</text>
+<path d="M 1103.39 100.50 H 1106.90" />
+<path d="M 882.39 100.50 H 885.78" />
+<path d="M 737.82 100.50 H 741.42" />
+<path d="M 639.55 100.50 H 643.77" />
+<path d="M 536.47 100.50 H 545.25" />
+<path d="M 434.08 100.50 H 441.94" />
+<path d="M 335.57 100.50 H 339.69" />
+</g>
+<g class="gpu_line">
+<text x="10" y="0.5em" transform="translate(0,120.50)" class="line_label">time to hit presentation</text>
+<path d="M 1106.90 120.50 H 1156.74" />
+<path d="M 885.78 120.50 H 935.36" />
+<path d="M 741.42 120.50 H 791.06" />
+<path d="M 643.77 120.50 H 692.69" />
+<path d="M 545.25 120.50 H 594.41" />
+<path d="M 441.94 120.50 H 491.31" />
+<path d="M 339.69 120.50 H 388.92" />
+<path d="M 255.00 120.50 H 290.43" />
+</g>
+<g class="trans_begin">
+<path d="M 1103.39 80.50 V 100.50" /><circle cx="1103.39" cy="90.50" r="3" />
+<path d="M 882.39 80.50 V 100.50" /><circle cx="882.39" cy="90.50" r="3" />
+<path d="M 737.82 80.50 V 100.50" /><circle cx="737.82" cy="90.50" r="3" />
+<path d="M 639.55 80.50 V 100.50" /><circle cx="639.55" cy="90.50" r="3" />
+<path d="M 536.47 80.50 V 100.50" /><circle cx="536.47" cy="90.50" r="3" />
+<path d="M 434.08 80.50 V 100.50" /><circle cx="434.08" cy="90.50" r="3" />
+<path d="M 335.57 80.50 V 100.50" /><circle cx="335.57" cy="90.50" r="3" />
+</g>
+<g class="trans_post">
+<path d="M 1106.90 100.50 V 120.50" /><circle cx="1106.90" cy="110.50" r="3" />
+<path d="M 885.78 100.50 V 120.50" /><circle cx="885.78" cy="110.50" r="3" />
+<path d="M 741.42 100.50 V 120.50" /><circle cx="741.42" cy="110.50" r="3" />
+<path d="M 643.77 100.50 V 120.50" /><circle cx="643.77" cy="110.50" r="3" />
+<path d="M 545.25 100.50 V 120.50" /><circle cx="545.25" cy="110.50" r="3" />
+<path d="M 441.94 100.50 V 120.50" /><circle cx="441.94" cy="110.50" r="3" />
+<path d="M 339.69 100.50 V 120.50" /><circle cx="339.69" cy="110.50" r="3" />
+</g>
+</g>
+</svg>
