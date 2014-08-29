@@ -143,6 +143,9 @@ parse_file(const char *name, struct parse_context *ctx)
 
 	fclose(fp);
 
+	if (ret != -1)
+		ret = graph_data_end(ctx->gdata);
+
 out_release:
 	bytebuf_release(&bb);
 	json_tokener_free(jtok);

@@ -162,6 +162,9 @@ graph_data_init(struct graph_data *gdata);
 void
 graph_data_release(struct graph_data *gdata);
 
+int
+graph_data_end(struct graph_data *gdata);
+
 void
 graph_data_time(struct graph_data *gdata, const struct timespec *ts);
 
@@ -190,7 +193,7 @@ timespec_invalidate(struct timespec *ts)
 }
 
 static inline int
-timespec_is_valid(struct timespec *ts)
+timespec_is_valid(const struct timespec *ts)
 {
 	return ts->tv_nsec >= 0;
 }

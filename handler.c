@@ -324,6 +324,28 @@ core_repaint_enter_loop(struct parse_context *ctx, const struct timespec *ts,
 	if (!act)
 		return ERROR;
 
+	timespec_invalidate(&og->last_exit_loop);
+
+	return 0;
+}
+
+int
+graph_data_end(struct graph_data *gdata)
+{
+	struct output_graph *og;
+
+	for (og = gdata->output; og; og = og->next) {
+		if (timespec_is_valid(&og->last_exit_loop)) {
+			struct timespec ts = { 0, -1 };
+			struct activity *act;
+
+			act = activity_create(&og->not_looping,
+					      &og->last_exit_loop, &ts);
+			if (!act)
+				return ERROR;
+		}
+	}
+
 	return 0;
 }
 
