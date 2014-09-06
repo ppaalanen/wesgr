@@ -32,7 +32,7 @@ config.mk: Makefile
 	echo "DEP_LIBS=`pkg-config --libs '$(PKG_DEPS)'`" >> $@
 
 graph.svg: $(EXE) style.css
-	./$(EXE) testdata/timeline-1.log
+	./$(EXE) -i testdata/timeline-1.log -o $@ -a 413 -b 620
 
 %.o: %.c
 	$(M_V_CC)$(CC) $(CFLAGS) $(CPPFLAGS) -c -o $@ $<

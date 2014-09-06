@@ -23,6 +23,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
+#include <getopt.h>
 
 #include <json.h>
 
@@ -155,14 +156,101 @@ out_release:
 	return ret;
 }
 
+struct prog_args {
+	int from_ms;
+	int to_ms;
+	const char *infile;
+	const char *svgfile;
+};
+
+static void
+print_usage(const char *prog)
+{
+	printf("Usage:\n  %s -i input.log -o output.svg [options]\n"
+	"Arguments and options:\n"
+	"  -h, --help                Print this help and exit.\n"
+	"  -i, --input=FILE          Read FILE as the input data.\n"
+	"  -o, --output=FILE         Write FILE as the output SVG.\n"
+	"  -a, --from-ms=MS          Start the graph at MS milliseconds.\n"
+	"  -b, --to-ms=MS            End the graph at MS milliseconds.\n",
+	prog);
+}
+
+static int
+parse_opts(struct prog_args *args, int argc, char *argv[])
+{
+	static const char short_opts[] = "hi:a:b:o:";
+	static const struct option opts[] = {
+		{ "help",              no_argument,       0, 'h' },
+		{ "input",             required_argument, 0, 'i' },
+		{ "from-ms",           required_argument, 0, 'a' },
+		{ "to-ms",             required_argument, 0, 'b' },
+		{ "output",            required_argument, 0, 'o' },
+		{ NULL, 0, 0, 0 }
+	};
+
+	while (1) {
+		int c;
+		int longindex;
+
+		c = getopt_long(argc, argv, short_opts, opts, &longindex);
+		if (c == -1)
+			break;
+
+		switch (c) {
+		case '?':
+			return -1;
+		case 'h':
+			print_usage(argv[0]);
+			return -1;
+		case 'i':
+			args->infile = optarg;
+			break;
+		case 'a':
+			args->from_ms = atoi(optarg);
+			break;
+		case 'b':
+			args->to_ms = atoi(optarg);
+			break;
+		case 'o':
+			args->svgfile = optarg;
+			break;
+		default:
+			break;
+		}
+	}
+
+	if (optind < argc) {
+		fprintf(stderr, "Error, extra command line arguments:");
+		while (optind < argc)
+			fprintf(stderr, " %s", argv[optind++]);
+		fprintf(stderr, "\n");
+
+		return -1;
+	}
+
+	return 0;
+}
+
 int
 main(int argc, char *argv[])
 {
+	struct prog_args args = { -1, -1, NULL, NULL };
 	struct graph_data gdata;
 	struct parse_context ctx;
 
-	if (argc != 2)
+	if (parse_opts(&args, argc, argv) < 0)
 		return 1;
+
+	if (!args.infile) {
+		fprintf(stderr, "Error: input file not specified.\n");
+		return 1;
+	}
+
+	if (!args.svgfile) {
+		fprintf(stderr, "Error: output file not specified.\n");
+		return 1;
+	}
 
 	if (graph_data_init(&gdata) < 0)
 		return 1;
@@ -170,10 +258,11 @@ main(int argc, char *argv[])
 	if (parse_context_init(&ctx, &gdata) < 0)
 		return 1;
 
-	if (parse_file(argv[1], &ctx) < 0)
+	if (parse_file(args.infile, &ctx) < 0)
 		return 1;
 
-	if (graph_data_to_svg(&gdata, 413, 620, "graph.svg") < 0)
+	if (graph_data_to_svg(&gdata, args.from_ms, args.to_ms,
+			      args.svgfile) < 0)
 		return 1;
 
 	parse_context_release(&ctx);
