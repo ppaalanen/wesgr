@@ -14,8 +14,9 @@ EXE := wesgr
 GENERATED := config.mk
 
 all: $(EXE)
+demo: tgraph1.svg tgraph2.svg
 
-.PHONY: clean test
+.PHONY: clean demo
 
 clean:
 	rm -f *.o $(EXE) $(GENERATED)
@@ -31,8 +32,11 @@ config.mk: Makefile
 	echo "DEP_CFLAGS=`pkg-config --cflags '$(PKG_DEPS)'`" > $@ && \
 	echo "DEP_LIBS=`pkg-config --libs '$(PKG_DEPS)'`" >> $@
 
-graph.svg: $(EXE) style.css
+tgraph1.svg: $(EXE) style.css
 	./$(EXE) -i testdata/timeline-1.log -o $@ -a 413 -b 620
+
+tgraph2.svg: $(EXE) style.css
+	./$(EXE) -i testdata/timeline-2.log -o $@
 
 %.o: %.c
 	$(M_V_CC)$(CC) $(CFLAGS) $(CPPFLAGS) -c -o $@ $<
