@@ -196,6 +196,9 @@ timespec_sub_to_nsec(const struct timespec *a, const struct timespec *b)
 	if (!timespec_is_valid(a))
 		return UINT64_MAX;
 
+	if (timespec_cmp(a, b) < 0)
+		return 0;
+
 	timespec_sub(&d, a, b);
 	nsec = d.tv_sec * NSEC_PER_SEC + d.tv_nsec;
 
@@ -226,10 +229,7 @@ is_in_range(struct svg_context *ctx, const struct timespec *a,
 {
 	uint64_t begin, end;
 
-	if (timespec_cmp(a, &ctx->begin) < 0)
-		begin = 0;
-	else
-		begin = timespec_sub_to_nsec(a, &ctx->begin);
+	begin = timespec_sub_to_nsec(a, &ctx->begin);
 
 	if (!timespec_is_valid(b))
 		return begin <= ctx->time_range.b;
