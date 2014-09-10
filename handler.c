@@ -26,6 +26,7 @@
 #include <inttypes.h>
 #include <time.h>
 #include <assert.h>
+#include <string.h>
 
 #include <json.h>
 
@@ -234,6 +235,30 @@ core_repaint_posted(struct parse_context *ctx, const struct timespec *ts,
 	return 0;
 }
 
+static void
+process_need_list(struct update_graph *update_gr,
+		  const struct timespec *vblank)
+{
+	struct update *update;
+
+	update = update_gr->need_vblank;
+	if (!update)
+		return;
+
+	while (1) {
+		update->vblank = *vblank;
+
+		if (!update->next)
+			break;
+
+		update = update->next;
+	}
+
+	update->next = update_gr->updates;
+	update_gr->updates = update;
+	update_gr->need_vblank = NULL;
+}
+
 static int
 core_repaint_finished(struct parse_context *ctx, const struct timespec *ts,
 		      struct json_object *jobj)
@@ -251,6 +276,7 @@ core_repaint_finished(struct parse_context *ctx, const struct timespec *ts,
 	if (timespec_is_valid(&og->last_posted)) {
 		struct line_block *lb;
 		struct vblank *vbl;
+		struct update_graph *ugr;
 
 		lb = line_block_create(&og->gpu_line, &og->last_posted,
 				       ts, "repaint_gpu");
@@ -261,6 +287,9 @@ core_repaint_finished(struct parse_context *ctx, const struct timespec *ts,
 		vbl = vblank_create(&og->vblanks, ts);
 		if (!vbl)
 			return ERROR;
+
+		for (ugr = og->updates; ugr; ugr = ugr->next)
+			process_need_list(ugr, &vbl->ts);
 	}
 
 	timespec_invalidate(&og->last_posted);
@@ -329,6 +358,185 @@ core_repaint_enter_loop(struct parse_context *ctx, const struct timespec *ts,
 	return 0;
 }
 
+static struct update *
+create_update(const struct timespec *damaged)
+{
+	struct update *update;
+
+	update = calloc(1, sizeof *update);
+	if (!update)
+		return ERROR_NULL;
+
+	update->damage = *damaged;
+	timespec_invalidate(&update->flush);
+	timespec_invalidate(&update->vblank);
+
+	return update;
+}
+
+static struct update_graph *
+create_update_graph(struct output_graph *output_gr,
+		    struct info_weston_surface *iws)
+{
+	struct update_graph *update_gr;
+
+	update_gr = calloc(1, sizeof *update_gr);
+	if (!update_gr)
+		return ERROR_NULL;
+
+	update_gr->label = strdup(iws->description);
+	update_gr->style = "damage";
+	update_gr->next = output_gr->updates;
+	output_gr->updates = update_gr;
+
+	return update_gr;
+}
+
+static struct surface_graph_list *
+create_surface_graph_list(struct info_weston_surface *iws,
+			  struct output_graph *output_gr)
+{
+	struct surface_graph_list *sgl;
+
+	assert(output_gr);
+
+	sgl = calloc(1, sizeof *sgl);
+	if (!sgl)
+		return ERROR_NULL;
+
+	sgl->update_gr = create_update_graph(output_gr, iws);
+	sgl->output_gr = output_gr;
+	sgl->next = iws->glist;
+	iws->glist = sgl;
+
+	if (!sgl->update_gr)
+		return ERROR_NULL;
+
+	return sgl;
+}
+
+static struct surface_graph_list *
+get_surface_graph_list(struct parse_context *ctx,
+		       struct info_weston_surface *iws,
+		       struct output_graph *output_gr)
+{
+	struct surface_graph_list *sgl;
+
+	if (!output_gr) {
+		if (iws->last)
+			return iws->last;
+
+		assert(iws->glist == NULL);
+
+		output_gr = ctx->gdata->output;
+	} else {
+		if (iws->last && iws->last->output_gr == output_gr)
+			return iws->last;
+
+		for (sgl = iws->glist; sgl; sgl = sgl->next) {
+			if (sgl->output_gr == output_gr)
+				return sgl;
+		}
+	}
+
+	sgl = create_surface_graph_list(iws, output_gr);
+	if (!sgl)
+		return ERROR_NULL;
+
+	iws->last = sgl;
+
+	return sgl;
+}
+
+static int
+put_update_to_graph_list(struct surface_graph_list *sgl, struct update *update)
+{
+	if (!update)
+		return 0;
+
+	assert(update->next == NULL);
+	update->next = sgl->update_gr->updates;
+	sgl->update_gr->updates = update;
+
+	return 0;
+}
+
+static int
+put_update_to_need_list(struct surface_graph_list *sgl, struct update *update)
+{
+	if (!update)
+		return 0;
+
+	assert(update->next == NULL);
+	update->next = sgl->update_gr->need_vblank;
+	sgl->update_gr->need_vblank = update;
+
+	return 0;
+}
+
+static int
+core_commit_damage(struct parse_context *ctx, const struct timespec *ts,
+		   struct json_object *jobj)
+{
+	struct object_info *surface;
+	struct surface_graph_list *sgl;
+
+	surface = get_object_info_from_timepoint(ctx, jobj, "ws");
+	if (surface->type != TYPE_WESTON_SURFACE)
+		return ERROR;
+
+	sgl = get_surface_graph_list(ctx, &surface->info.ws, NULL);
+	if (!sgl)
+		return ERROR;
+
+	if (put_update_to_graph_list(sgl, surface->info.ws.open_update) < 0)
+		return ERROR;
+
+	surface->info.ws.open_update = create_update(ts);
+	if (!surface->info.ws.open_update)
+		return ERROR;
+
+	return 0;
+}
+
+static int
+core_flush_damage(struct parse_context *ctx, const struct timespec *ts,
+		  struct json_object *jobj)
+{
+	struct object_info *surface;
+	struct object_info *output;
+	struct output_graph *og;
+	struct update *update;
+	struct surface_graph_list *sgl;
+
+	surface = get_object_info_from_timepoint(ctx, jobj, "ws");
+	if (surface->type != TYPE_WESTON_SURFACE)
+		return ERROR;
+
+	update = surface->info.ws.open_update;
+	if (!update) {
+		printf("non damaged flush\n");
+		return 0;
+	}
+	surface->info.ws.open_update = NULL;
+
+	output = get_object_info_from_timepoint(ctx, jobj, "wo");
+	og = get_output_graph(ctx, output);
+	if (!og)
+		return ERROR;
+
+	update->flush = *ts;
+
+	sgl = get_surface_graph_list(ctx, &surface->info.ws, og);
+	if (!sgl)
+		return ERROR;
+
+	if (put_update_to_need_list(sgl, update) < 0)
+		return ERROR;
+
+	return 0;
+}
+
 int
 graph_data_end(struct graph_data *gdata)
 {
@@ -356,6 +564,8 @@ const struct tp_handler_item tp_handler_list[] = {
 	{ "core_repaint_begin", core_repaint_begin },
 	{ "core_repaint_posted", core_repaint_posted },
 	{ "core_repaint_req", core_repaint_req },
+	{ "core_commit_damage", core_commit_damage },
+	{ "core_flush_damage", core_flush_damage },
 	{ NULL, NULL }
 };
 

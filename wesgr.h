@@ -33,6 +33,22 @@ struct json_object;
 struct info_weston_output;
 struct info_weston_surface;
 
+struct update {
+	struct timespec damage;
+	struct timespec flush;
+	struct timespec vblank;
+	struct update *next;
+};
+
+struct update_graph {
+	struct update_graph *next;
+	struct update *updates;
+	const char *style;
+	char *label;
+
+	struct update *need_vblank;
+};
+
 struct activity {
 	struct timespec begin;
 	struct timespec end;
@@ -89,6 +105,7 @@ struct output_graph {
 	struct transition_set posts;
 	struct vblank_set vblanks;
 	struct activity_set not_looping;
+	struct update_graph *updates;
 
 	double y1, y2;
 
@@ -108,6 +125,12 @@ struct graph_data {
 	double time_axis_y;
 };
 
+struct surface_graph_list {
+	struct surface_graph_list *next;
+	struct output_graph *output_gr;
+	struct update_graph *update_gr;
+};
+
 enum object_type {
 	TYPE_WESTON_OUTPUT,
 	TYPE_WESTON_SURFACE,
@@ -120,6 +143,10 @@ struct info_weston_output {
 
 struct info_weston_surface {
 	const char *description;
+
+	struct update *open_update;
+	struct surface_graph_list *glist;
+	struct surface_graph_list *last;
 };
 
 struct object_info {

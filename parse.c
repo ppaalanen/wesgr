@@ -196,6 +196,9 @@ parse_weston_surface(struct parse_context *ctx, struct object_info *oi)
 		return ERROR;
 
 	oi->info.ws.description = json_object_get_string(desc_jobj);
+	oi->info.ws.open_update = NULL;
+	oi->info.ws.glist = NULL;
+	oi->info.ws.last = NULL;
 
 	return 0;
 }
