@@ -540,18 +540,24 @@ core_flush_damage(struct parse_context *ctx, const struct timespec *ts,
 int
 graph_data_end(struct graph_data *gdata)
 {
+	struct timespec invalid = { 0, 0 };
 	struct output_graph *og;
+	struct update_graph *upg;
+
+	timespec_invalidate(&invalid);
 
 	for (og = gdata->output; og; og = og->next) {
 		if (timespec_is_valid(&og->last_exit_loop)) {
-			struct timespec ts = { 0, -1 };
 			struct activity *act;
 
 			act = activity_create(&og->not_looping,
-					      &og->last_exit_loop, &ts);
+					      &og->last_exit_loop, &invalid);
 			if (!act)
 				return ERROR;
 		}
+
+		for (upg = og->updates; upg; upg = upg->next)
+			process_need_list(upg, &invalid);
 	}
 
 	return 0;
