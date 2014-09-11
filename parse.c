@@ -113,8 +113,22 @@ parse_context_init(struct parse_context *ctx, struct graph_data *gdata)
 static void
 object_info_destroy(struct object_info *oi)
 {
+	struct surface_graph_list *sgl, *tmp;
+
 	if (oi->jobj)
 		json_object_put(oi->jobj);
+
+	switch (oi->type) {
+	default:
+	case TYPE_WESTON_OUTPUT:
+		break;
+	case TYPE_WESTON_SURFACE:
+		for (sgl = oi->info.ws.glist; sgl; sgl = tmp) {
+			tmp = sgl->next;
+			free(sgl);
+		}
+		break;
+	}
 
 	free(oi);
 }
