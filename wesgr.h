@@ -46,6 +46,8 @@ struct update_graph {
 	const char *style;
 	char *label;
 
+	double y;
+
 	struct update *need_vblank;
 };
 

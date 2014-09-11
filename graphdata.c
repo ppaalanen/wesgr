@@ -385,8 +385,49 @@ activity_set_to_svg(struct activity_set *acts, struct svg_context *ctx,
 }
 
 static int
+update_to_svg(struct update *up, struct svg_context *ctx, double y)
+{
+	double a, b, c;
+
+	if (!is_in_range(ctx, &up->damage, &up->vblank))
+		return 0;
+
+	a = svg_get_x(ctx, &up->damage);
+	b = svg_get_x(ctx, &up->flush);
+	c = svg_get_x(ctx, &up->vblank);
+	fprintf(ctx->fp, "<circle cx=\"%.2f\" cy=\"%.2f\" r=\"3\" />", a, y);
+	fprintf(ctx->fp, "<circle cx=\"%.2f\" cy=\"%.2f\" r=\"3\" />", b, y);
+	fprintf(ctx->fp, "<path d=\"M %.2f %.2f H %.2f\" />\n", a, y, c);
+
+	return 0;
+}
+
+static int
+update_graph_to_svg(struct update_graph *update_gr, struct svg_context *ctx)
+{
+	struct update *upd;
+
+	fprintf(ctx->fp, "<g class=\"%s\">\n", update_gr->style);
+	fprintf(ctx->fp,
+		"<text x=\"10\" y=\"0.5em\" "
+		"transform=\"translate(0,%.2f)\" "
+		"class=\"line_label\">%s</text>\n",
+		update_gr->y, update_gr->label);
+
+	for (upd = update_gr->updates; upd; upd = upd->next)
+		if (update_to_svg(upd, ctx, update_gr->y) < 0)
+			return ERROR;
+
+	fprintf(ctx->fp, "</g>\n");
+
+	return 0;
+}
+
+static int
 output_graph_to_svg(struct output_graph *og, struct svg_context *ctx)
 {
+	struct update_graph *upg;
+
 	if (activity_set_to_svg(&og->not_looping, ctx, og->y1, og->y2) < 0)
 		return ERROR;
 
@@ -409,6 +450,10 @@ output_graph_to_svg(struct output_graph *og, struct svg_context *ctx)
 	if (transition_set_to_svg(&og->posts, ctx,
 				  og->submit_line.y, og->gpu_line.y) < 0)
 		return ERROR;
+
+	for (upg = og->updates; upg; upg = upg->next)
+		if (update_graph_to_svg(upg, ctx) < 0)
+			return ERROR;
 
 	return 0;
 }
@@ -553,10 +598,19 @@ svg_context_init(struct svg_context *ctx, struct graph_data *gdata,
 			 (ctx->time_range.b - ctx->time_range.a);
 }
 
+static double
+update_graph_set_position(struct update_graph *update_gr, double y)
+{
+	update_gr->y = y + 8.0;
+
+	return y + 16.0;
+}
+
 static void
 graph_data_init_draw(struct graph_data *gdata, double *width, double *height)
 {
 	struct output_graph *og;
+	struct update_graph *upg;
 	const double line_step = 20.0;
 	const double output_margin = 30.0;
 	double y = 50.5;
@@ -574,7 +628,10 @@ graph_data_init_draw(struct graph_data *gdata, double *width, double *height)
 		y += line_step;
 
 		og->gpu_line.y = y;
-		y += line_step;
+		y += line_step * 1.5;
+
+		for (upg = og->updates; upg; upg = upg->next)
+			y = update_graph_set_position(upg, y);
 
 		og->y2 = y + 10.0;
 

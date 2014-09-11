@@ -45,6 +45,16 @@ g[class~="not_looping"] path {
 	stroke-width: 0;
 }
 
+g[class~="damage"] path {
+	stroke: black;
+	stroke-width: 1;
+}
+
+g[class~="damage"] circle {
+	stroke-width: 0;
+	fill: #505;
+}
+
 path.axis, path.major_tick {
 	stroke: #000;
 	stroke-width: 1;
