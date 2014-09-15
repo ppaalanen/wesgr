@@ -95,6 +95,17 @@ lookup_table_set(struct lookup_table *tbl, unsigned id, void *data)
 }
 
 static void
+lookup_table_for_each(struct lookup_table *tbl,
+		      void (*func)(void **, void*), void *data)
+{
+	unsigned i;
+
+	for (i = 0; i < tbl->alloc; i++)
+		if (tbl->array[i])
+			(*func)(&tbl->array[i], data);
+}
+
+static void
 lookup_table_release(struct lookup_table *tbl)
 {
 	free(tbl->array);
@@ -105,7 +116,6 @@ parse_context_init(struct parse_context *ctx, struct graph_data *gdata)
 {
 	lookup_table_init(&ctx->idmap);
 	ctx->gdata = gdata;
-	ctx->obj_list = NULL;
 
 	return 0;
 }
@@ -133,23 +143,22 @@ object_info_destroy(struct object_info *oi)
 	free(oi);
 }
 
+static void
+free_item(void **ptr, void *data)
+{
+	object_info_destroy(*ptr);
+	*ptr = NULL;
+}
+
 void
 parse_context_release(struct parse_context *ctx)
 {
-	struct object_info *oi, *tmp;
-
+	lookup_table_for_each(&ctx->idmap, free_item, NULL);
 	lookup_table_release(&ctx->idmap);
-
-	for (oi = ctx->obj_list; oi; oi = tmp) {
-		tmp = oi->next;
-		object_info_destroy(oi);
-	}
 }
 
 static struct object_info *
-parse_context_create_object_info(struct parse_context *ctx, unsigned id,
-				 enum object_type type,
-				 struct json_object *jobj)
+object_info_create(unsigned id, enum object_type type)
 {
 	struct object_info *oi;
 
@@ -159,11 +168,22 @@ parse_context_create_object_info(struct parse_context *ctx, unsigned id,
 
 	oi->id = id;
 	oi->type = type;
-	oi->jobj = json_object_get(jobj);
-	oi->next = ctx->obj_list;
-	ctx->obj_list = oi;
 
 	return oi;
+}
+
+static int
+object_info_update(struct object_info *oi, enum object_type type,
+		   struct json_object *jobj)
+{
+	if (oi->type != type)
+		return ERROR;
+
+	if (oi->jobj)
+		json_object_put(oi->jobj);
+	oi->jobj = json_object_get(jobj);
+
+	return 0;
 }
 
 static int
@@ -210,9 +230,6 @@ parse_weston_surface(struct parse_context *ctx, struct object_info *oi)
 		return ERROR;
 
 	oi->info.ws.description = json_object_get_string(desc_jobj);
-	oi->info.ws.open_update = NULL;
-	oi->info.ws.glist = NULL;
-	oi->info.ws.last = NULL;
 
 	return 0;
 }
@@ -241,8 +258,14 @@ parse_context_process_info(struct parse_context *ctx,
 	if (get_object_type(&type, json_object_get_string(type_jobj)) < 0)
 		return ERROR;
 
-	oi = parse_context_create_object_info(ctx, id, type, jobj);
-	if (lookup_table_set(&ctx->idmap, id, oi) < 0)
+	oi = lookup_table_get(&ctx->idmap, id);
+	if (!oi) {
+		oi = object_info_create(id, type);
+		if (lookup_table_set(&ctx->idmap, id, oi) < 0)
+			return ERROR;
+	}
+
+	if (object_info_update(oi, type, jobj) < 0)
 		return ERROR;
 
 	switch (oi->type) {

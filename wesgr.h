@@ -155,7 +155,6 @@ struct object_info {
 	unsigned id;
 	enum object_type type;
 	struct json_object *jobj;
-	struct object_info *next;
 	union {
 		struct info_weston_output wo;
 		struct info_weston_surface ws;
@@ -171,7 +170,6 @@ struct lookup_table {
 struct parse_context {
 	struct lookup_table idmap;
 	struct graph_data *gdata;
-	struct object_info *obj_list;
 };
 
 typedef int (*tp_handler_t)(struct parse_context *ctx,

@@ -515,7 +515,8 @@ core_flush_damage(struct parse_context *ctx, const struct timespec *ts,
 
 	update = surface->info.ws.open_update;
 	if (!update) {
-		printf("non damaged flush\n");
+		printf("%lld.%09ld non damaged flush\n",
+			(long long)ts->tv_sec, ts->tv_nsec);
 		return 0;
 	}
 	surface->info.ws.open_update = NULL;
