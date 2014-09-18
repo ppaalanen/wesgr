@@ -5,7 +5,7 @@ V ?= 0
 
 CFLAGS+=-Wextra -Wall -Wno-unused-parameter \
 	-Wstrict-prototypes -Wmissing-prototypes -O0 -g
-CPPFLAGS+=$(DEP_CFLAGS)
+CPPFLAGS+=$(DEP_CFLAGS) -D_GNU_SOURCE
 LDLIBS+=$(DEP_LIBS) -lm
 
 HEADERS := $(wildcard *.h)

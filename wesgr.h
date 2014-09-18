@@ -144,7 +144,7 @@ struct info_weston_output {
 };
 
 struct info_weston_surface {
-	const char *description;
+	char *description;
 
 	struct update *open_update;
 	struct surface_graph_list *glist;

@@ -24,6 +24,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <errno.h>
+#include <limits.h>
 
 #include <json.h>
 
@@ -133,6 +134,7 @@ object_info_destroy(struct object_info *oi)
 	case TYPE_WESTON_OUTPUT:
 		break;
 	case TYPE_WESTON_SURFACE:
+		free(oi->info.ws.description);
 		for (sgl = oi->info.ws.glist; sgl; sgl = tmp) {
 			tmp = sgl->next;
 			free(sgl);
@@ -209,6 +211,24 @@ get_object_type(enum object_type *type, const char *type_name)
 }
 
 static int
+parse_id(unsigned *id, struct json_object *jobj)
+{
+	int64_t val;
+
+	errno = 0;
+	val = json_object_get_int64(jobj);
+	if (errno)
+		return ERROR;
+
+	if (val < 0 || val > UINT_MAX)
+		return ERROR;
+
+	*id = val;
+
+	return 0;
+}
+
+static int
 parse_weston_output(struct parse_context *ctx, struct object_info *oi)
 {
 	struct json_object *name_jobj;
@@ -225,11 +245,39 @@ static int
 parse_weston_surface(struct parse_context *ctx, struct object_info *oi)
 {
 	struct json_object *desc_jobj;
+	struct json_object *parent;
+	const char *desc;
 
 	if (!json_object_object_get_ex(oi->jobj, "desc", &desc_jobj))
 		return ERROR;
 
-	oi->info.ws.description = json_object_get_string(desc_jobj);
+	desc = json_object_get_string(desc_jobj);
+
+	free(oi->info.ws.description);
+	oi->info.ws.description = NULL;
+
+	if (json_object_object_get_ex(oi->jobj, "main_surface", &parent)) {
+		int ret;
+		unsigned id;
+		struct object_info *poi;
+
+		if (parse_id(&id, parent) < 0)
+			return ERROR;
+
+		poi = lookup_table_get(&ctx->idmap, id);
+		if (!poi)
+			return ERROR;
+
+		ret = asprintf(&oi->info.ws.description, "%s of %s", desc,
+			       poi->info.ws.description);
+		if (ret < 0)
+			oi->info.ws.description = NULL;
+	} else {
+		oi->info.ws.description = strdup(desc);
+	}
+
+	if (!oi->info.ws.description)
+		return ERROR;
 
 	return 0;
 }
@@ -244,9 +292,7 @@ parse_context_process_info(struct parse_context *ctx,
 	struct json_object *type_jobj;
 	enum object_type type;
 
-	errno = 0;
-	id = json_object_get_int64(id_jobj);
-	if (errno)
+	if (parse_id(&id, id_jobj) < 0)
 		return ERROR;
 
 	if (!json_object_object_get_ex(jobj, "type", &type_jobj))
