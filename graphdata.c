@@ -52,6 +52,39 @@ graph_data_init(struct graph_data *gdata)
 }
 
 static void
+update_destroy(struct update *update)
+{
+	free(update);
+}
+
+static void
+update_graph_destroy(struct update_graph *update_gr)
+{
+	struct update *update, *tmp;
+
+	assert(update_gr->need_vblank == NULL);
+
+	for (update = update_gr->updates; update; update = tmp) {
+		tmp = update->next;
+		update_destroy(update);
+	}
+
+	free(update_gr->label);
+	free(update_gr);
+}
+
+static void
+update_graph_list_destroy(struct update_graph *update_gr)
+{
+	struct update_graph *tmp;
+
+	for (; update_gr; update_gr = tmp) {
+		tmp = update_gr->next;
+		update_graph_destroy(update_gr);
+	}
+}
+
+static void
 activity_destroy(struct activity *act)
 {
 	free(act);
@@ -130,6 +163,7 @@ output_graph_destroy(struct output_graph *og)
 	transition_set_release(&og->posts);
 	vblank_set_release(&og->vblanks);
 	activity_set_release(&og->not_looping);
+	update_graph_list_destroy(og->updates);
 	free(og);
 }
 
