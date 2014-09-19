@@ -3,6 +3,10 @@ text {
 	font-size: 12px;
 }
 
+text[class~="output_label"] {
+	font-weight: bold;
+}
+
 g[class~="delay_line"] path,
 g[class~="submit_line"] path,
 g[class~="gpu_line"] path {

@@ -507,6 +507,12 @@ output_graph_to_svg(struct output_graph *og, struct svg_context *ctx)
 {
 	struct update_graph *upg;
 
+	fprintf(ctx->fp,
+		"<text x=\"10\" y=\"0\" "
+		"transform=\"translate(0,%.2f)\" "
+		"class=\"output_label\">Output %s</text>\n",
+		og->title_y, og->info->name);
+
 	if (activity_set_to_svg(&og->not_looping, ctx, og->y1, og->y2) < 0)
 		return ERROR;
 
@@ -712,6 +718,9 @@ graph_data_init_draw(struct graph_data *gdata, double *width, double *height)
 
 	for (og = gdata->output; og; og = og->next) {
 		og->y1 = y - 10.0;
+
+		og->title_y = y;
+		y += line_step;
 
 		og->delay_line.y = y;
 		y += line_step;

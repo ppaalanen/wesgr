@@ -110,6 +110,7 @@ struct output_graph {
 	struct update_graph *updates;
 
 	double y1, y2;
+	double title_y;
 
 	struct timespec last_req;
 	struct timespec last_finished;
