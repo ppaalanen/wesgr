@@ -432,7 +432,8 @@ activity_set_to_svg(struct activity_set *acts, struct svg_context *ctx,
 }
 
 static int
-update_to_svg(struct update *up, struct svg_context *ctx, double y)
+update_to_svg(struct update *up, struct svg_context *ctx, double y,
+	      struct timespec **last_end)
 {
 	double a, b;
 	struct timespec *begin;
@@ -448,6 +449,14 @@ update_to_svg(struct update *up, struct svg_context *ctx, double y)
 
 	if (!is_in_range(ctx, begin, &up->vblank))
 		return 0;
+
+	if (*last_end && timespec_cmp(*last_end, begin) >= 0) {
+		y += 5.0;
+		*last_end = NULL;
+	} else {
+		y -= 5.0;
+		*last_end = &up->vblank;
+	}
 
 	if (is_point_in_range(ctx, &up->damage)) {
 		double x = svg_get_x(ctx, &up->damage);
@@ -475,16 +484,17 @@ static int
 update_graph_to_svg(struct update_graph *update_gr, struct svg_context *ctx)
 {
 	struct update *upd;
+	struct timespec *last_end = NULL;
 
 	fprintf(ctx->fp, "<g class=\"%s\">\n", update_gr->style);
 	fprintf(ctx->fp,
-		"<text x=\"10\" y=\"0.5em\" "
+		"<text x=\"10\" y=\"0.0em\" "
 		"transform=\"translate(0,%.2f)\" "
 		"class=\"line_label\">%s</text>\n",
 		update_gr->y, update_gr->label);
 
 	for (upd = update_gr->updates; upd; upd = upd->next)
-		if (update_to_svg(upd, ctx, update_gr->y) < 0)
+		if (update_to_svg(upd, ctx, update_gr->y, &last_end) < 0)
 			return ERROR;
 
 	fprintf(ctx->fp, "</g>\n");
@@ -683,9 +693,9 @@ svg_context_init(struct svg_context *ctx, struct graph_data *gdata,
 static double
 update_graph_set_position(struct update_graph *update_gr, double y)
 {
-	update_gr->y = y + 8.0;
+	update_gr->y = y + 13.0;
 
-	return y + 16.0;
+	return y + 26.0;
 }
 
 static void
