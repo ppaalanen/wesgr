@@ -1,0 +1,282 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1300" height="614" version="1.1" baseProfile="full">
+<defs>
+<style type="text/css"><![CDATA[
+text {
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: 12px;
+}
+
+text[class~="output_label"] {
+	font-weight: bold;
+}
+
+g[class~="delay_line"] path,
+g[class~="submit_line"] path,
+g[class~="gpu_line"] path {
+	stroke: black;
+	stroke-width: 5;
+}
+
+g[class~="trans_begin"] path {
+	stroke: black;
+	stroke-width: 1;
+}
+
+g[class~="trans_begin"] circle {
+	stroke-width: 0;
+	fill: green;
+}
+
+g[class~="trans_post"] path {
+	stroke: black;
+	stroke-width: 1;
+}
+
+g[class~="trans_post"] circle {
+	stroke-width: 0;
+	fill: blue;
+}
+
+g[class~="vblank"] path {
+	stroke: #b00;
+	stroke-width: 1;
+}
+
+g[class~="vblank"] circle {
+	stroke-width: 0;
+	fill: #b00;
+}
+
+g[class~="not_looping"] path {
+	fill: #ddd;
+	stroke-width: 0;
+}
+
+g[class~="damage"] path {
+	stroke: black;
+	stroke-width: 1;
+}
+
+g[class~="damage"] circle {
+	stroke-width: 0;
+	fill: #505;
+}
+
+path.axis, path.major_tick {
+	stroke: #000;
+	stroke-width: 1;
+}
+
+path.minor_tick {
+	stroke: #888;
+	stroke-width: 1;
+}
+
+text.tick_label {
+}
+
+]]></style>
+</defs>
+<rect width="100%" height="100%" fill="white" />
+<g id="layer1">
+<path d="M 255.00 50.50 V 65.50 M 357.00 50.50 V 65.50 M 459.00 50.50 V 65.50 M 561.00 50.50 V 65.50 M 663.00 50.50 V 65.50 M 765.00 50.50 V 65.50 M 867.00 50.50 V 65.50 M 969.00 50.50 V 65.50 M 1071.00 50.50 V 65.50 M 1173.00 50.50 V 65.50 M 1275.00 50.50 V 65.50 " class="major_tick" />
+<text x="255.00" y="45.50" text-anchor="middle" class="tick_label">26000</text>
+<text x="357.00" y="45.50" text-anchor="middle" class="tick_label">26010</text>
+<text x="459.00" y="45.50" text-anchor="middle" class="tick_label">26020</text>
+<text x="561.00" y="45.50" text-anchor="middle" class="tick_label">26030</text>
+<text x="663.00" y="45.50" text-anchor="middle" class="tick_label">26040</text>
+<text x="765.00" y="45.50" text-anchor="middle" class="tick_label">26050</text>
+<text x="867.00" y="45.50" text-anchor="middle" class="tick_label">26060</text>
+<text x="969.00" y="45.50" text-anchor="middle" class="tick_label">26070</text>
+<text x="1071.00" y="45.50" text-anchor="middle" class="tick_label">26080</text>
+<text x="1173.00" y="45.50" text-anchor="middle" class="tick_label">26090</text>
+<text x="1275.00" y="45.50" text-anchor="middle" class="tick_label">26100</text>
+<path d="M 275.40 50.50 V 60.50 M 295.80 50.50 V 60.50 M 316.20 50.50 V 60.50 M 336.60 50.50 V 60.50 M 377.40 50.50 V 60.50 M 397.80 50.50 V 60.50 M 418.20 50.50 V 60.50 M 438.60 50.50 V 60.50 M 479.40 50.50 V 60.50 M 499.80 50.50 V 60.50 M 520.20 50.50 V 60.50 M 540.60 50.50 V 60.50 M 581.40 50.50 V 60.50 M 601.80 50.50 V 60.50 M 622.20 50.50 V 60.50 M 642.60 50.50 V 60.50 M 683.40 50.50 V 60.50 M 703.80 50.50 V 60.50 M 724.20 50.50 V 60.50 M 744.60 50.50 V 60.50 M 785.40 50.50 V 60.50 M 805.80 50.50 V 60.50 M 826.20 50.50 V 60.50 M 846.60 50.50 V 60.50 M 887.40 50.50 V 60.50 M 907.80 50.50 V 60.50 M 928.20 50.50 V 60.50 M 948.60 50.50 V 60.50 M 989.40 50.50 V 60.50 M 1009.80 50.50 V 60.50 M 1030.20 50.50 V 60.50 M 1050.60 50.50 V 60.50 M 1091.40 50.50 V 60.50 M 1111.80 50.50 V 60.50 M 1132.20 50.50 V 60.50 M 1152.60 50.50 V 60.50 M 1193.40 50.50 V 60.50 M 1213.80 50.50 V 60.50 M 1234.20 50.50 V 60.50 M 1254.60 50.50 V 60.50 " class="minor_tick" />
+<path d="M 255.00 50.50 H 1275.00" class="axis" />
+<text x="765.00" y="-1.5em" text-anchor="middle" transform="translate(0,45.50)" class="axis_label">time (ms)</text>
+<text x="10" y="0" transform="translate(0,80.50)" class="output_label">Output VGA1</text>
+<g class="not_looping">
+</g>
+<g class="vblank">
+<path d="M 1135.02 70.50 V 258.50" /><circle cx="1135.02" cy="70.50" r="3" />
+<path d="M 964.38 70.50 V 258.50" /><circle cx="964.38" cy="70.50" r="3" />
+<path d="M 795.01 70.50 V 258.50" /><circle cx="795.01" cy="70.50" r="3" />
+<path d="M 625.03 70.50 V 258.50" /><circle cx="625.03" cy="70.50" r="3" />
+<path d="M 454.22 70.50 V 258.50" /><circle cx="454.22" cy="70.50" r="3" />
+<path d="M 284.96 70.50 V 258.50" /><circle cx="284.96" cy="70.50" r="3" />
+</g>
+<g class="delay_line">
+<text x="10" y="0.5em" transform="translate(0,100.50)" class="line_label">delay before repaint</text>
+<path d="M 1135.02 100.50 H 1228.36" />
+<path d="M 964.38 100.50 H 1058.16" />
+<path d="M 795.01 100.50 H 888.40" />
+<path d="M 625.03 100.50 H 718.34" />
+<path d="M 454.22 100.50 H 548.43" />
+<path d="M 284.96 100.50 H 378.19" />
+</g>
+<g class="submit_line">
+<text x="10" y="0.5em" transform="translate(0,120.50)" class="line_label">output_repaint()</text>
+<path d="M 1228.36 120.50 H 1234.57" />
+<path d="M 1058.16 120.50 H 1064.75" />
+<path d="M 888.40 120.50 H 894.57" />
+<path d="M 718.34 120.50 H 724.26" />
+<path d="M 548.43 120.50 H 556.34" />
+<path d="M 378.19 120.50 H 384.59" />
+</g>
+<g class="gpu_line">
+<text x="10" y="0.5em" transform="translate(0,140.50)" class="line_label">time to hit presentation</text>
+<path d="M 1234.57 140.50 H 1275.00" />
+<path d="M 1064.75 140.50 H 1135.02" />
+<path d="M 894.57 140.50 H 964.38" />
+<path d="M 724.26 140.50 H 795.01" />
+<path d="M 556.34 140.50 H 625.03" />
+<path d="M 384.59 140.50 H 454.22" />
+<path d="M 255.00 140.50 H 284.96" />
+</g>
+<g class="trans_begin">
+<path d="M 1228.36 100.50 V 120.50" /><circle cx="1228.36" cy="110.50" r="3" />
+<path d="M 1058.16 100.50 V 120.50" /><circle cx="1058.16" cy="110.50" r="3" />
+<path d="M 888.40 100.50 V 120.50" /><circle cx="888.40" cy="110.50" r="3" />
+<path d="M 718.34 100.50 V 120.50" /><circle cx="718.34" cy="110.50" r="3" />
+<path d="M 548.43 100.50 V 120.50" /><circle cx="548.43" cy="110.50" r="3" />
+<path d="M 378.19 100.50 V 120.50" /><circle cx="378.19" cy="110.50" r="3" />
+</g>
+<g class="trans_post">
+<path d="M 1234.57 120.50 V 140.50" /><circle cx="1234.57" cy="130.50" r="3" />
+<path d="M 1064.75 120.50 V 140.50" /><circle cx="1064.75" cy="130.50" r="3" />
+<path d="M 894.57 120.50 V 140.50" /><circle cx="894.57" cy="130.50" r="3" />
+<path d="M 724.26 120.50 V 140.50" /><circle cx="724.26" cy="130.50" r="3" />
+<path d="M 556.34 120.50 V 140.50" /><circle cx="556.34" cy="130.50" r="3" />
+<path d="M 384.59 120.50 V 140.50" /><circle cx="384.59" cy="130.50" r="3" />
+</g>
+<g class="damage">
+<text x="10" y="0.0em" transform="translate(0,183.50)" class="line_label">cursor</text>
+</g>
+<g class="damage">
+<text x="10" y="0.0em" transform="translate(0,209.50)" class="line_label">top-level window 'simple-egl'</text>
+<path d="M 1240.04 200.50 v 8.00 L 1245.04 204.50 Z" /><path d="M 1240.04 204.50 H 1275.00" />
+<path d="M 1070.29 210.50 v 8.00 L 1075.29 214.50 Z" /><circle cx="1180.84" cy="214.50" r="3" /><path d="M 1070.29 214.50 H 1275.00" />
+<path d="M 900.03 200.50 v 8.00 L 905.03 204.50 Z" /><circle cx="1010.66" cy="204.50" r="3" /><path d="M 900.03 204.50 H 1135.02" />
+<path d="M 729.67 210.50 v 8.00 L 734.67 214.50 Z" /><circle cx="842.09" cy="214.50" r="3" /><path d="M 729.67 214.50 H 964.38" />
+<path d="M 561.58 200.50 v 8.00 L 566.58 204.50 Z" /><circle cx="669.04" cy="204.50" r="3" /><path d="M 561.58 204.50 H 795.01" />
+<path d="M 390.30 210.50 v 8.00 L 395.30 214.50 Z" /><circle cx="501.18" cy="214.50" r="3" /><path d="M 390.30 214.50 H 625.03" />
+<circle cx="330.26" cy="204.50" r="3" /><path d="M 255.00 204.50 H 454.22" />
+<path d="M 255.00 214.50 H 284.96" />
+</g>
+<g class="damage">
+<text x="10" y="0.0em" transform="translate(0,235.50)" class="line_label">cursor</text>
+</g>
+<text x="10" y="0" transform="translate(0,278.50)" class="output_label">Output LVDS1</text>
+<g class="not_looping">
+</g>
+<g class="vblank">
+<path d="M 1254.49 268.50 V 534.50" /><circle cx="1254.49" cy="268.50" r="3" />
+<path d="M 1084.60 268.50 V 534.50" /><circle cx="1084.60" cy="268.50" r="3" />
+<path d="M 914.78 268.50 V 534.50" /><circle cx="914.78" cy="268.50" r="3" />
+<path d="M 745.33 268.50 V 534.50" /><circle cx="745.33" cy="268.50" r="3" />
+<path d="M 574.28 268.50 V 534.50" /><circle cx="574.28" cy="268.50" r="3" />
+<path d="M 405.29 268.50 V 534.50" /><circle cx="405.29" cy="268.50" r="3" />
+</g>
+<g class="delay_line">
+<text x="10" y="0.5em" transform="translate(0,298.50)" class="line_label">delay before repaint</text>
+<path d="M 1254.49 298.50 H 1275.00" />
+<path d="M 1084.60 298.50 H 1178.15" />
+<path d="M 914.78 298.50 H 1008.66" />
+<path d="M 745.33 298.50 H 839.55" />
+<path d="M 574.28 298.50 H 667.10" />
+<path d="M 405.29 298.50 H 499.18" />
+<path d="M 255.00 298.50 H 328.27" />
+</g>
+<g class="submit_line">
+<text x="10" y="0.5em" transform="translate(0,318.50)" class="line_label">output_repaint()</text>
+<path d="M 1178.15 318.50 H 1187.09" />
+<path d="M 1008.66 318.50 H 1017.65" />
+<path d="M 839.55 318.50 H 848.46" />
+<path d="M 667.10 318.50 H 675.26" />
+<path d="M 499.18 318.50 H 508.02" />
+<path d="M 328.27 318.50 H 337.23" />
+</g>
+<g class="gpu_line">
+<text x="10" y="0.5em" transform="translate(0,338.50)" class="line_label">time to hit presentation</text>
+<path d="M 1187.09 338.50 H 1254.49" />
+<path d="M 1017.65 338.50 H 1084.60" />
+<path d="M 848.46 338.50 H 914.78" />
+<path d="M 675.26 338.50 H 745.33" />
+<path d="M 508.02 338.50 H 574.28" />
+<path d="M 337.23 338.50 H 405.29" />
+</g>
+<g class="trans_begin">
+<path d="M 1178.15 298.50 V 318.50" /><circle cx="1178.15" cy="308.50" r="3" />
+<path d="M 1008.66 298.50 V 318.50" /><circle cx="1008.66" cy="308.50" r="3" />
+<path d="M 839.55 298.50 V 318.50" /><circle cx="839.55" cy="308.50" r="3" />
+<path d="M 667.10 298.50 V 318.50" /><circle cx="667.10" cy="308.50" r="3" />
+<path d="M 499.18 298.50 V 318.50" /><circle cx="499.18" cy="308.50" r="3" />
+<path d="M 328.27 298.50 V 318.50" /><circle cx="328.27" cy="308.50" r="3" />
+</g>
+<g class="trans_post">
+<path d="M 1187.09 318.50 V 338.50" /><circle cx="1187.09" cy="328.50" r="3" />
+<path d="M 1017.65 318.50 V 338.50" /><circle cx="1017.65" cy="328.50" r="3" />
+<path d="M 848.46 318.50 V 338.50" /><circle cx="848.46" cy="328.50" r="3" />
+<path d="M 675.26 318.50 V 338.50" /><circle cx="675.26" cy="328.50" r="3" />
+<path d="M 508.02 318.50 V 338.50" /><circle cx="508.02" cy="328.50" r="3" />
+<path d="M 337.23 318.50 V 338.50" /><circle cx="337.23" cy="328.50" r="3" />
+</g>
+<g class="damage">
+<text x="10" y="0.0em" transform="translate(0,381.50)" class="line_label">cursor</text>
+</g>
+<g class="damage">
+<text x="10" y="0.0em" transform="translate(0,407.50)" class="line_label">top-level window 'simple-egl'</text>
+</g>
+<g class="damage">
+<text x="10" y="0.0em" transform="translate(0,433.50)" class="line_label">sub-surface of panel for output LVDS1</text>
+</g>
+<g class="damage">
+<text x="10" y="0.0em" transform="translate(0,459.50)" class="line_label">top-level window 'Wayland Terminal'</text>
+</g>
+<g class="damage">
+<text x="10" y="0.0em" transform="translate(0,485.50)" class="line_label">panel for output LVDS1</text>
+</g>
+<g class="damage">
+<text x="10" y="0.0em" transform="translate(0,511.50)" class="line_label">cursor</text>
+<circle cx="1179.92" cy="506.50" r="3" /><path d="M 1179.92 506.50 H 1254.49" />
+<circle cx="1010.27" cy="516.50" r="3" /><path d="M 1010.27 516.50 H 1084.60" />
+<circle cx="841.65" cy="506.50" r="3" /><path d="M 841.65 506.50 H 914.78" />
+<circle cx="668.77" cy="516.50" r="3" /><path d="M 668.77 516.50 H 745.33" />
+<circle cx="500.82" cy="506.50" r="3" /><path d="M 500.82 506.50 H 574.28" />
+<circle cx="329.89" cy="516.50" r="3" /><path d="M 329.89 516.50 H 405.29" />
+</g>
+<g transform="translate(255.00,554.50)">
+<g transform="translate(0,0)">
+	<g class="trans_begin" transform="translate(0,0)">
+		<circle cx="5" cy="5" r="3" />
+		<text x="15" y="10">begin repaint</text>
+	</g>
+
+	<g class="trans_post" transform="translate(0,20)">
+		<circle cx="5" cy="5" r="3" />
+		<text x="15" y="10">post repaint</text>
+	</g>
+</g>
+
+<g transform="translate(120,0)">
+	<g class="vblank">
+		<path d="M 5 3 V 30" />
+		<circle cx="5" cy="5" r="3" />
+		<text x="15" y="10">vblank</text>
+	</g>
+</g>
+
+
+<g transform="translate(200,0)">
+	<g class="damage">
+		<path d="M 0 -4 v 8 L 5 0 Z" transform="translate(60,5)" />
+		<circle cx="160" cy="5" r="3" />
+		<path d="M 60 5 H 240" />
+		<text x="5" y="30">damage commit</text>
+		<text x="120" y="30">repaint flush</text>
+		<text x="215" y="30">hit screen</text>
+	</g>
+</g>
+</g>
+</g>
+</svg>
