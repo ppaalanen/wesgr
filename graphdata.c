@@ -498,27 +498,40 @@ round_up(uint64_t nsec, uint64_t f)
 	return (nsec + f - 1) / f * f;
 }
 
+static uint64_t
+compute_big_skip_ns(struct svg_context *ctx)
+{
+	static const uint64_t mtick_levels[] = { 1, 5 };
+	uint64_t scale;
+	uint64_t skip_ms;
+	unsigned i;
+
+	skip_ms = round(50.0 / ctx->nsec_to_x * 1e-6);
+
+	for (scale = 1; scale < 100001; scale *= 10) {
+		for (i = 0; i < ARRAY_LENGTH(mtick_levels); i++) {
+			uint64_t skip = mtick_levels[i] * scale;
+
+			if (skip_ms < skip)
+				return skip * 1000000;
+		}
+	}
+
+	return NSEC_PER_SEC;
+}
+
 static void
 time_scale_to_svg(struct svg_context *ctx, double y)
 {
 	uint64_t nsec;
-	uint64_t skip_ms;
-	static const uint64_t mtick_levels[] = { 1, 5, 10, 20, 50, 100, 500 };
-	uint64_t big_skip = NSEC_PER_SEC;
+	uint64_t big_skip;
 	uint64_t lil_skip;
-	unsigned i;
 	double left, right;
 	const double big_tick_size = 15.0;
 	const double lil_tick_size = 10.0;
 	const double tick_label_up = 5.0;
 
-	skip_ms = round(50.0 / ctx->nsec_to_x * 1e-6);
-	for (i = 0; i < ARRAY_LENGTH(mtick_levels); i++) {
-		if (skip_ms < mtick_levels[i]) {
-			big_skip = mtick_levels[i] * 1000000;
-			break;
-		}
-	}
+	big_skip = compute_big_skip_ns(ctx);
 	lil_skip = big_skip / 5;
 
 	fprintf(ctx->fp, "<path d=\"");
