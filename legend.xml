@@ -1,0 +1,31 @@
+<g transform="translate(0,0)">
+	<g class="trans_begin" transform="translate(0,0)">
+		<circle cx="5" cy="5" r="3" />
+		<text x="15" y="10">begin repaint</text>
+	</g>
+
+	<g class="trans_post" transform="translate(0,20)">
+		<circle cx="5" cy="5" r="3" />
+		<text x="15" y="10">post repaint</text>
+	</g>
+</g>
+
+<g transform="translate(120,0)">
+	<g class="vblank">
+		<path d="M 5 3 V 30" />
+		<circle cx="5" cy="5" r="3" />
+		<text x="15" y="10">vblank</text>
+	</g>
+</g>
+
+
+<g transform="translate(200,0)">
+	<g class="damage">
+		<path d="M 0 -4 v 8 L 5 0 Z" transform="translate(60,5)" />
+		<circle cx="160" cy="5" r="3" />
+		<path d="M 60 5 H 240" />
+		<text x="5" y="30">damage commit</text>
+		<text x="120" y="30">repaint flush</text>
+		<text x="215" y="30">hit screen</text>
+	</g>
+</g>

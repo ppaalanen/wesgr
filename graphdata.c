@@ -625,21 +625,13 @@ time_scale_to_svg(struct svg_context *ctx, double y)
 }
 
 static int
-headers_to_svg(struct svg_context *ctx)
+input_file(struct svg_context *ctx, const char *fname)
 {
 	FILE *in;
 	char buf[2048];
 	size_t len;
 
-	fprintf(ctx->fp,
-		"<svg xmlns=\"http://www.w3.org/2000/svg\""
-		" width=\"%d\" height=\"%d\""
-		" version=\"1.1\" baseProfile=\"full\">\n"
-		"<defs>\n"
-		"<style type=\"text/css\"><![CDATA[\n",
-		(int)ctx->width, (int)ctx->height);
-
-	in = fopen("style.css", "r");
+	in = fopen(fname, "r");
 	if (!in)
 		return ERROR;
 
@@ -650,6 +642,24 @@ headers_to_svg(struct svg_context *ctx)
 		}
 	}
 	fclose(in);
+
+	return 0;
+}
+
+static int
+headers_to_svg(struct svg_context *ctx)
+{
+
+	fprintf(ctx->fp,
+		"<svg xmlns=\"http://www.w3.org/2000/svg\""
+		" width=\"%d\" height=\"%d\""
+		" version=\"1.1\" baseProfile=\"full\">\n"
+		"<defs>\n"
+		"<style type=\"text/css\"><![CDATA[\n",
+		(int)ctx->width, (int)ctx->height);
+
+	if (input_file(ctx, "style.css") < 0)
+		return ERROR;
 
 	fprintf(ctx->fp,
 		"]]></style>\n"
@@ -666,6 +676,20 @@ footers_to_svg(struct svg_context *ctx)
 	fprintf(ctx->fp,
 	"</g>\n"
 	"</svg>\n");
+}
+
+static int
+legend_to_svg(struct svg_context *ctx, double y)
+{
+	fprintf(ctx->fp, "<g transform=\"translate(%.2f,%.2f)\">\n",
+		svg_get_x_from_nsec(ctx, 0), y);
+
+	if (input_file(ctx, "legend.xml") < 0)
+		return ERROR;
+
+	fprintf(ctx->fp, "</g>\n");
+
+	return 0;
 }
 
 static void
@@ -739,6 +763,9 @@ graph_data_init_draw(struct graph_data *gdata, double *width, double *height)
 		y += output_margin;
 	}
 
+	gdata->legend_y = y;
+	y += 40.0;
+
 	*width = 1300;
 	*height = y + line_step;
 }
@@ -766,6 +793,9 @@ graph_data_to_svg(struct graph_data *gdata, int from_ms, int to_ms,
 	for (og = gdata->output; og; og = og->next)
 		if (output_graph_to_svg(og, &ctx) < 0)
 			return ERROR;
+
+	if (legend_to_svg(&ctx, gdata->legend_y) < 0)
+		return ERROR;
 
 	footers_to_svg(&ctx);
 

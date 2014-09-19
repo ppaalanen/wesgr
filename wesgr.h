@@ -126,6 +126,7 @@ struct graph_data {
 	struct timespec end;
 
 	double time_axis_y;
+	double legend_y;
 };
 
 struct surface_graph_list {
