@@ -421,17 +421,36 @@ activity_set_to_svg(struct activity_set *acts, struct svg_context *ctx,
 static int
 update_to_svg(struct update *up, struct svg_context *ctx, double y)
 {
-	double a, b, c;
+	double a, b;
+	struct timespec *begin;
 
-	if (!is_in_range(ctx, &up->damage, &up->vblank))
+	if (timespec_is_valid(&up->damage))
+		begin = &up->damage;
+	else if (timespec_is_valid(&up->flush))
+		begin = &up->flush;
+	else if (timespec_is_valid(&up->vblank))
+		begin = &up->vblank;
+	else
 		return 0;
 
-	a = svg_get_x(ctx, &up->damage);
-	b = svg_get_x(ctx, &up->flush);
-	c = svg_get_x(ctx, &up->vblank);
-	fprintf(ctx->fp, "<circle cx=\"%.2f\" cy=\"%.2f\" r=\"3\" />", a, y);
-	fprintf(ctx->fp, "<circle cx=\"%.2f\" cy=\"%.2f\" r=\"3\" />", b, y);
-	fprintf(ctx->fp, "<path d=\"M %.2f %.2f H %.2f\" />\n", a, y, c);
+	if (!is_in_range(ctx, begin, &up->vblank))
+		return 0;
+
+	if (timespec_is_valid(&up->damage)) {
+		double x = svg_get_x(ctx, &up->damage);
+
+		fprintf(ctx->fp, "<circle cx=\"%.2f\" cy=\"%.2f\" r=\"3\" />", x, y);
+	}
+
+	if (timespec_is_valid(&up->flush)) {
+		double x = svg_get_x(ctx, &up->flush);
+
+		fprintf(ctx->fp, "<circle cx=\"%.2f\" cy=\"%.2f\" r=\"3\" />", x, y);
+	}
+
+	a = svg_get_x(ctx, begin);
+	b = svg_get_x(ctx, &up->vblank);
+	fprintf(ctx->fp, "<path d=\"M %.2f %.2f H %.2f\" />\n", a, y, b);
 
 	return 0;
 }
