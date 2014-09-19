@@ -247,17 +247,22 @@ parse_weston_surface(struct parse_context *ctx, struct object_info *oi)
 	struct json_object *desc_jobj;
 	struct json_object *parent;
 	const char *desc;
+	char str[64];
+	int ret;
 
 	if (!json_object_object_get_ex(oi->jobj, "desc", &desc_jobj))
 		return ERROR;
 
 	desc = json_object_get_string(desc_jobj);
+	if (!desc) {
+		snprintf(str, sizeof(str), "[id:%u]", oi->id);
+		desc = str;
+	}
 
 	free(oi->info.ws.description);
 	oi->info.ws.description = NULL;
 
 	if (json_object_object_get_ex(oi->jobj, "main_surface", &parent)) {
-		int ret;
 		unsigned id;
 		struct object_info *poi;
 
