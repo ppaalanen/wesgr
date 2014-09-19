@@ -14,7 +14,7 @@ EXE := wesgr
 GENERATED := config.mk
 
 all: $(EXE)
-demo: tgraph1.svg tgraph2.svg
+demo: tgraph1.svg tgraph2.svg sample3-overview.svg sample3-detail.svg
 
 .PHONY: clean demo
 
@@ -37,6 +37,12 @@ tgraph1.svg: $(EXE) style.css
 
 tgraph2.svg: $(EXE) style.css
 	./$(EXE) -i testdata/timeline-2.log -o $@
+
+sample3-overview.svg: $(EXE) style.css
+	./$(EXE) -i testdata/timeline-3.log -o $@
+
+sample3-detail.svg: $(EXE) style.css
+	./$(EXE) -i testdata/timeline-3.log -o $@ -a 26000 -b 26100
 
 %.o: %.c
 	$(M_V_CC)$(CC) $(CFLAGS) $(CPPFLAGS) -c -o $@ $<
