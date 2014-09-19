@@ -279,6 +279,19 @@ is_in_range(struct svg_context *ctx, const struct timespec *a,
 }
 
 static int
+is_point_in_range(struct svg_context *ctx, const struct timespec *a)
+{
+	uint64_t pt;
+
+	if (!timespec_is_valid(a))
+		return 0;
+
+	pt = timespec_sub_to_nsec(a, &ctx->begin);
+
+	return !(pt < ctx->time_range.a || pt > ctx->time_range.b);
+}
+
+static int
 line_block_to_svg(struct line_block *lb, struct svg_context *ctx, double y)
 {
 	double a, b;
@@ -436,16 +449,19 @@ update_to_svg(struct update *up, struct svg_context *ctx, double y)
 	if (!is_in_range(ctx, begin, &up->vblank))
 		return 0;
 
-	if (timespec_is_valid(&up->damage)) {
+	if (is_point_in_range(ctx, &up->damage)) {
 		double x = svg_get_x(ctx, &up->damage);
 
-		fprintf(ctx->fp, "<circle cx=\"%.2f\" cy=\"%.2f\" r=\"3\" />", x, y);
+		fprintf(ctx->fp,
+			"<path d=\"M %.2f %.2f v %.2f L %.2f %.2f Z\" />",
+			x, y - 4.0, 8.0, x + 5.0, y);
 	}
 
-	if (timespec_is_valid(&up->flush)) {
+	if (is_point_in_range(ctx, &up->flush)) {
 		double x = svg_get_x(ctx, &up->flush);
 
-		fprintf(ctx->fp, "<circle cx=\"%.2f\" cy=\"%.2f\" r=\"3\" />", x, y);
+		fprintf(ctx->fp,
+			"<circle cx=\"%.2f\" cy=\"%.2f\" r=\"3\" />", x, y);
 	}
 
 	a = svg_get_x(ctx, begin);
