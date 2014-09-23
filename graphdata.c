@@ -450,7 +450,9 @@ update_to_svg(struct update *up, struct svg_context *ctx, double y,
 	if (!is_in_range(ctx, begin, &up->vblank))
 		return 0;
 
-	if (*last_end && timespec_cmp(*last_end, begin) >= 0) {
+	/* XXX: we parse the list from end to begin, this is wrong way */
+	if (*last_end && (!timespec_is_valid(*last_end) ||
+			  timespec_cmp(*last_end, begin) >= 0)) {
 		y += 5.0;
 		*last_end = NULL;
 	} else {
