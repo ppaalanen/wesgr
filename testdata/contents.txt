@@ -1,0 +1,44 @@
+timeline-1.log 2014-08-16
+    Original test data, now outdated.
+    Locally modified Weston repaint algorithm.
+
+timeline-2.log 2014-09-06
+    New events core_commit_damage and core_flush_damage.
+    Locally modified Weston repaint algorithm.
+    
+    Recorded on X11-backend, single output, no windows, just hovering over
+    the panel buttons.
+
+timeline-3.log 2014-09-19
+    Captured on DRM backend, two outputs, no correct vblank timestamping
+    yet.
+    Locally modified Weston repaint algorithm.
+    
+    Contains pointer movement, open weston-terminal, panel tooltip,
+    simple-egl. Simple-egl is being dragged from one output to the other and
+    back.
+
+timeline-egl-move-output.log 2014-10-02
+    Captured on DRM backend, two outputs.
+    Correct vblank timestamps, Weston 1.6.0 repaint algorithm.
+
+    Contains simple-egl running, pointer movement, dragging simple-egl
+    from one output to another.
+
+timeline-presentation-f.log 2014-10-02
+    Captured on DRM backend, two outputs.
+    Correct vblank timestamps, Weston 1.6.0 repaint algorithm.
+
+    Contains presentation-shm -f on one output.
+
+timeline-presentation-i.log 2014-10-02
+    Captured on DRM backend, two outputs.
+    Correct vblank timestamps, Weston 1.6.0 repaint algorithm.
+
+    Contains presentation-shm -i on one output.
+
+timeline-presentation-p.log 2014-10-02
+    Captured on DRM backend, two outputs.
+    Correct vblank timestamps, Weston 1.6.0 repaint algorithm.
+
+    Contains presentation-shm -p on one output.
