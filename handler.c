@@ -416,27 +416,46 @@ create_surface_graph_list(struct info_weston_surface *iws,
 }
 
 static struct surface_graph_list *
+get_surface_graph_list_default(struct parse_context *ctx,
+			       struct info_weston_surface *iws)
+{
+	struct output_graph *output_gr;
+	struct surface_graph_list *sgl;
+
+	if (iws->last)
+		return iws->last;
+
+	assert(iws->glist == NULL);
+
+	/* By default, pick whatever the first output is. */
+	output_gr = ctx->gdata->output;
+	if (!output_gr)
+		return NULL;
+
+	sgl = create_surface_graph_list(iws, output_gr);
+	if (!sgl)
+		return ERROR_NULL;
+
+	iws->last = sgl;
+
+	return sgl;
+}
+
+static struct surface_graph_list *
 get_surface_graph_list(struct parse_context *ctx,
 		       struct info_weston_surface *iws,
 		       struct output_graph *output_gr)
 {
 	struct surface_graph_list *sgl;
 
-	if (!output_gr) {
-		if (iws->last)
-			return iws->last;
+	assert(output_gr);
 
-		assert(iws->glist == NULL);
+	if (iws->last && iws->last->output_gr == output_gr)
+		return iws->last;
 
-		output_gr = ctx->gdata->output;
-	} else {
-		if (iws->last && iws->last->output_gr == output_gr)
-			return iws->last;
-
-		for (sgl = iws->glist; sgl; sgl = sgl->next) {
-			if (sgl->output_gr == output_gr)
-				return sgl;
-		}
+	for (sgl = iws->glist; sgl; sgl = sgl->next) {
+		if (sgl->output_gr == output_gr)
+			return sgl;
 	}
 
 	sgl = create_surface_graph_list(iws, output_gr);
@@ -485,9 +504,13 @@ core_commit_damage(struct parse_context *ctx, const struct timespec *ts,
 	if (surface->type != TYPE_WESTON_SURFACE)
 		return ERROR;
 
-	sgl = get_surface_graph_list(ctx, &surface->info.ws, NULL);
-	if (!sgl)
-		return ERROR;
+	sgl = get_surface_graph_list_default(ctx, &surface->info.ws);
+	if (!sgl) {
+		fprintf(stderr, "info: ignoring core_commit_damage event at"
+			" %" PRId64 ".%09ld\n",
+			(int64_t)ts->tv_sec, ts->tv_nsec);
+		return 0;
+	}
 
 	if (put_update_to_graph_list(sgl, surface->info.ws.open_update) < 0)
 		return ERROR;
