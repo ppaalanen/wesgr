@@ -5,8 +5,8 @@ JSON timeline data interpreter and grapher.
 Its intention is to produce an SVG image with annotations,
 describing the actions related to Weston's repaint loop.
 
-The Weston JSON timeline format is still in development,
-but there is a [WIP branch](http://cgit.collabora.com/git/user/pq/weston.git/log/?h=JSON-timeline-WIP).
+JSON timeline feature was merged and released first in Weston 1.6.91
+(Weston 1.7 alpha).
 
 ## Building
 
