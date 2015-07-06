@@ -9,7 +9,7 @@ CPPFLAGS+=$(DEP_CFLAGS) -D_GNU_SOURCE
 LDLIBS+=$(DEP_LIBS) -lm
 
 HEADERS := $(wildcard *.h)
-OBJS := wesgr.o parse.o graphdata.o handler.o
+OBJS := wesgr.o parse.o graphdata.o handler.o resdata.o
 EXE := wesgr
 GENERATED := config.mk
 
@@ -25,6 +25,8 @@ $(EXE): $(OBJS)
 	$(M_V_LINK)$(CC) $(LDFLAGS) $^ $(LDLIBS) -o $@
 
 $(OBJS): $(HEADERS) config.mk
+
+resdata.o: legend.xml style.css
 
 PKG_DEPS := json-c >= 0.11
 config.mk: Makefile
@@ -47,12 +49,16 @@ sample3-detail.svg: $(EXE) style.css
 %.o: %.c
 	$(M_V_CC)$(CC) $(CFLAGS) $(CPPFLAGS) -c -o $@ $<
 
+%.o: %.S
+	$(M_V_AS)$(CC) $(ASFLAGS) $(CPPFLAGS) $(TARGET_MACH) -c -o $@ $<
+
 .SUFFIXES:
 
 m_v_cc_0 = @echo "  CC    " $@;
 M_V_CC = $(m_v_cc_$(V))
+m_v_as_0 = @echo "  CCAS  " $@;
+M_V_AS = $(m_v_as_$(V))
 m_v_link_0 = @echo "  LINK  " $@;
 M_V_LINK = $(m_v_link_$(V))
 m_v_gen_0 = @echo "  GEN   " $@;
 M_V_GEN = $(m_v_gen_$(V))
-

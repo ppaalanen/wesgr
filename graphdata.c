@@ -627,26 +627,27 @@ time_scale_to_svg(struct svg_context *ctx, double y)
 }
 
 static int
-input_file(struct svg_context *ctx, const char *fname)
+output_res(struct svg_context *ctx, char *data, size_t len)
 {
-	FILE *in;
-	char buf[2048];
-	size_t len;
+	size_t pos = 0;
+	size_t n;
 
-	in = fopen(fname, "r");
-	if (!in)
-		return ERROR;
-
-	while ((len = fread(buf, 1, sizeof(buf), in))) {
-		if (fwrite(buf, 1, len, ctx->fp) != len) {
-			fclose(in);
+	while (pos < len) {
+		n = fwrite(data + pos, 1, len - pos, ctx->fp);
+		if (n < 1)
 			return ERROR;
-		}
+		pos += n;
 	}
-	fclose(in);
 
 	return 0;
 }
+
+#define OUTPUT_RES(ctx, name)						\
+({									\
+	extern char RES_##name##_begin;					\
+	extern int RES_##name##_len;					\
+	output_res((ctx), &RES_##name##_begin, RES_##name##_len);	\
+})
 
 static int
 headers_to_svg(struct svg_context *ctx)
@@ -660,7 +661,7 @@ headers_to_svg(struct svg_context *ctx)
 		"<style type=\"text/css\"><![CDATA[\n",
 		(int)ctx->width, (int)ctx->height);
 
-	if (input_file(ctx, "style.css") < 0)
+	if (OUTPUT_RES(ctx, style) < 0)
 		return ERROR;
 
 	fprintf(ctx->fp,
@@ -686,7 +687,7 @@ legend_to_svg(struct svg_context *ctx, double y)
 	fprintf(ctx->fp, "<g transform=\"translate(%.2f,%.2f)\">\n",
 		svg_get_x_from_nsec(ctx, 0), y);
 
-	if (input_file(ctx, "legend.xml") < 0)
+	if (OUTPUT_RES(ctx, legend) < 0)
 		return ERROR;
 
 	fprintf(ctx->fp, "</g>\n");
