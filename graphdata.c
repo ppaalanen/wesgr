@@ -225,7 +225,7 @@ static uint64_t
 timespec_sub_to_nsec(const struct timespec *a, const struct timespec *b)
 {
 	struct timespec d;
-	uint64_t nsec;
+	uint64_t sec, nsec;
 
 	if (!timespec_is_valid(a))
 		return UINT64_MAX;
@@ -234,7 +234,11 @@ timespec_sub_to_nsec(const struct timespec *a, const struct timespec *b)
 		return 0;
 
 	timespec_sub(&d, a, b);
-	nsec = d.tv_sec * NSEC_PER_SEC + d.tv_nsec;
+
+	sec  = d.tv_sec;
+	nsec = d.tv_nsec;
+
+	nsec = sec * NSEC_PER_SEC + nsec;
 
 	return nsec;
 }
