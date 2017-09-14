@@ -9,7 +9,8 @@ text[class~="output_label"] {
 
 g[class~="delay_line"] path,
 g[class~="submit_line"] path,
-g[class~="gpu_line"] path {
+g[class~="gpu_line"] path,
+g[class~="renderer_gpu_line"] path {
 	stroke: black;
 	stroke-width: 5;
 }
