@@ -131,6 +131,7 @@ get_output_graph(struct parse_context *ctx, struct object_info *output)
 	line_graph_init(&og->delay_line, "delay_line", "delay before repaint");
 	line_graph_init(&og->submit_line, "submit_line", "output_repaint()");
 	line_graph_init(&og->gpu_line, "gpu_line", "time to hit presentation");
+	line_graph_init(&og->renderer_gpu_line, "renderer_gpu_line", "gpu rendering");
 	transition_set_init(&og->begins, "trans_begin");
 	transition_set_init(&og->posts, "trans_post");
 	vblank_set_init(&og->vblanks);
@@ -141,6 +142,7 @@ get_output_graph(struct parse_context *ctx, struct object_info *output)
 	timespec_invalidate(&og->last_begin);
 	timespec_invalidate(&og->last_posted);
 	timespec_invalidate(&og->last_exit_loop);
+	timespec_invalidate(&og->last_renderer_gpu_begin);
 	og->info = wo;
 	og->next = ctx->gdata->output;
 	ctx->gdata->output = og;
@@ -563,6 +565,54 @@ core_flush_damage(struct parse_context *ctx, const struct timespec *ts,
 	return 0;
 }
 
+static int
+renderer_gpu_begin(struct parse_context *ctx, const struct timespec *ts,
+		   struct json_object *jobj)
+{
+	struct object_info *output;
+	struct output_graph *og;
+
+	output = get_object_info_from_timepoint(ctx, jobj, "wo");
+	og = get_output_graph(ctx, output);
+	if (!og)
+		return ERROR;
+
+	og->last_renderer_gpu_begin =
+		get_timespec_from_timepoint(ctx, jobj, "gpu");
+
+	return 0;
+}
+
+static int
+renderer_gpu_end(struct parse_context *ctx, const struct timespec *ts,
+		 struct json_object *jobj)
+{
+	struct object_info *output;
+	struct output_graph *og;
+
+	output = get_object_info_from_timepoint(ctx, jobj, "wo");
+	og = get_output_graph(ctx, output);
+	if (!og)
+		return ERROR;
+
+	if (timespec_is_valid(&og->last_renderer_gpu_begin)) {
+		struct timespec gpu_ts;
+		struct line_block *lb;
+
+		gpu_ts = get_timespec_from_timepoint(ctx, jobj, "gpu");
+
+		lb = line_block_create(&og->renderer_gpu_line,
+				       &og->last_renderer_gpu_begin,
+				       &gpu_ts, "renderer_gpu");
+		if (!lb)
+			return ERROR;
+	}
+
+	timespec_invalidate(&og->last_renderer_gpu_begin);
+
+	return 0;
+}
+
 int
 graph_data_end(struct graph_data *gdata)
 {
@@ -598,6 +648,8 @@ const struct tp_handler_item tp_handler_list[] = {
 	{ "core_repaint_req", core_repaint_req },
 	{ "core_commit_damage", core_commit_damage },
 	{ "core_flush_damage", core_flush_damage },
+	{ "renderer_gpu_begin", renderer_gpu_begin},
+	{ "renderer_gpu_end", renderer_gpu_end},
 	{ NULL, NULL }
 };
 

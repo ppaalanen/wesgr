@@ -159,6 +159,7 @@ output_graph_destroy(struct output_graph *og)
 	line_graph_release(&og->delay_line);
 	line_graph_release(&og->submit_line);
 	line_graph_release(&og->gpu_line);
+	line_graph_release(&og->renderer_gpu_line);
 	transition_set_release(&og->begins);
 	transition_set_release(&og->posts);
 	vblank_set_release(&og->vblanks);
@@ -534,6 +535,9 @@ output_graph_to_svg(struct output_graph *og, struct svg_context *ctx)
 	if (line_graph_to_svg(&og->gpu_line, ctx) < 0)
 		return ERROR;
 
+	if (line_graph_to_svg(&og->renderer_gpu_line, ctx) < 0)
+		return ERROR;
+
 	if (transition_set_to_svg(&og->begins, ctx,
 				  og->delay_line.y, og->submit_line.y) < 0)
 		return ERROR;
@@ -760,6 +764,9 @@ graph_data_init_draw(struct graph_data *gdata, double *width, double *height)
 		y += line_step;
 
 		og->gpu_line.y = y;
+		y += line_step;
+
+		og->renderer_gpu_line.y = y;
 		y += line_step * 1.5;
 
 		for (upg = og->updates; upg; upg = upg->next)

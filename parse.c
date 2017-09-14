@@ -437,3 +437,19 @@ get_object_info_from_timepoint(struct parse_context *ctx,
 	return lookup_table_get(&ctx->idmap, id);
 }
 
+struct timespec
+get_timespec_from_timepoint(struct parse_context *ctx,
+			    struct json_object *jobj, const char *member)
+{
+	struct json_object *mem_jobj;
+	struct timespec ts;
+
+	timespec_invalidate(&ts);
+
+	if (!json_object_object_get_ex(jobj, member, &mem_jobj))
+		return ts;
+
+	parse_timespec(&ts, mem_jobj);
+
+	return ts;
+}

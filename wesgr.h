@@ -103,6 +103,7 @@ struct output_graph {
 	struct line_graph delay_line;
 	struct line_graph submit_line;
 	struct line_graph gpu_line;
+	struct line_graph renderer_gpu_line;
 	struct transition_set begins;
 	struct transition_set posts;
 	struct vblank_set vblanks;
@@ -117,6 +118,7 @@ struct output_graph {
 	struct timespec last_begin;
 	struct timespec last_posted;
 	struct timespec last_exit_loop;
+	struct timespec last_renderer_gpu_begin;
 };
 
 struct graph_data {
@@ -213,6 +215,10 @@ parse_context_process_object(struct parse_context *ctx,
 
 struct object_info *
 get_object_info_from_timepoint(struct parse_context *ctx,
+			       struct json_object *jobj, const char *member);
+
+struct timespec
+get_timespec_from_timepoint(struct parse_context *ctx,
 			       struct json_object *jobj, const char *member);
 
 static inline void
