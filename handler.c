@@ -503,7 +503,7 @@ core_commit_damage(struct parse_context *ctx, const struct timespec *ts,
 	struct surface_graph_list *sgl;
 
 	surface = get_object_info_from_timepoint(ctx, jobj, "ws");
-	if (surface->type != TYPE_WESTON_SURFACE)
+	if (!surface || surface->type != TYPE_WESTON_SURFACE)
 		return ERROR;
 
 	sgl = get_surface_graph_list_default(ctx, &surface->info.ws);
@@ -535,7 +535,7 @@ core_flush_damage(struct parse_context *ctx, const struct timespec *ts,
 	struct surface_graph_list *sgl;
 
 	surface = get_object_info_from_timepoint(ctx, jobj, "ws");
-	if (surface->type != TYPE_WESTON_SURFACE)
+	if (!surface || surface->type != TYPE_WESTON_SURFACE)
 		return ERROR;
 
 	update = surface->info.ws.open_update;
