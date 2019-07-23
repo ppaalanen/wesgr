@@ -127,7 +127,7 @@ parse_file(const char *name, struct parse_context *ctx)
 		}
 
 		if (!jobj) {
-			fprintf(stderr, "JSON parse failure\n");
+			fprintf(stderr, "JSON parse failure: %d\n", jerr);
 			break;
 		}
 
